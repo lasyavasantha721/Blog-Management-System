@@ -1,0 +1,1014 @@
+/* General Styling */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #f4f4f4; /* Light gray for better contrast */
+}
+
+/* Navbar Styling */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/* Normal state: bolder text, bright color */
+.navbar .nav-link {
+  color: #fff !important;       /* ensure bright white text */
+  font-weight: 600 !important;  /* a bit bolder than normal */
+  transition: color 0.3s ease;  /* smooth transition on hover */
+}
+
+/* Hover state: use a subtle highlight color */
+.navbar .nav-link:hover {
+  color: #ffcc00 !important;    /* gold highlight on hover */
+  text-decoration: none;        /* remove underline if any */
+}
+.home-container.section-container {
+  width: 100%;
+  height: 100vh;
+  /* Unique home background */
+  background: url("/static/images/home-bg.jpg") no-repeat center center/cover;
+  display: flex;              /* We rely on .hidden to hide it initially */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 20px;
+  position: relative;
+}
+
+/* Dark overlay for better text visibility on home page */
+.home-container.section-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Dark overlay */
+}
+
+/* Home Content Styling */
+.home-content {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 10px;
+  animation: fadeIn 1.2s ease-in-out;
+  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Welcoming Heading */
+.home-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffcc00; /* Classy Gold Color */
+  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Subtext Styling */
+.home-content p {
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: #f8f8f8;
+  margin-top: 15px;
+}
+
+/* About Section */
+.about-container {
+  margin-top: 30px;
+  padding: 25px;
+  text-align: center;
+  border-radius: 10px;
+  border-bottom: 3px solid #ffcc00; /* Subtle gold underline */
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+/* About Us Heading */
+.about-container h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  display: inline-block;
+}
+
+/* About Us Text */
+.about-container p {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: white;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------
+   HIDE/SHOW LOGIC
+-------------------------------------------- */
+/* -----------------------------------------------------
+   1) HIDE/SHOW LOGIC & SECTION CONTAINERS
+------------------------------------------------------ */
+
+/* Hide Sections by Default */
+.hidden {
+  display: none !important;
+}
+
+/* Section Container */
+.section-container {
+  display: none; /* hidden by default */
+  width: 100%;
+  padding: 40px;
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+.section-container.active {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Optional overlay for other sections */
+
+.section-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  pointer-events: none; /* let clicks pass through overlay */
+  z-index: 0; 
+}
+
+
+/* Shared Section Content Container */
+.section-content {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto; /* allows form inputs to be clickable */
+
+  padding: 40px;
+  border-radius: 10px;
+  
+  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.3);
+  width: 70%;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+
+/* Override h3 specifically in the profile section */
+#profileSection .section-content h3 {
+  font-size: 1.8rem !important;     /* larger font size */
+  font-weight: 700 !important;      /* bold text */
+  text-decoration: underline !important;  /* underline the heading */ 
+  color: #ffcc00 !important;       
+}
+
+/* Profile Info - Gold for "Your Posts" */
+#profileInfo h5 {
+  color: #ffcc00;
+  font-weight: bold;
+  font-size: 1.2rem; 
+}
+
+/* Form Inputs */
+.form-control {  /*for input boxes in forms*/
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: white;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.8); /* for text input*/
+}
+
+
+.form-control:focus {
+  background: rgba(50, 47, 47, 0.5);
+  color: #fff;
+  border-color: #ffcc00;
+
+  /* Remove the default blue focus shadow */
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+/* Buttons */
+.btn {
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+
+/* -----------------------------------------------------
+BLOG POST SECTION
+------------------------------------------------------*/
+ /* A heading style for the blog section */
+.blog-section-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* The grid container for blog cards */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem; /* spacing between cards */
+  width: 100%;
+}
+
+/* Card styling (similar to .post-card) */
+.blog-card {
+  
+  background: #fff !important;
+  color: #000 !important;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* softer shadow */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s;
+}
+
+/* Hover effect */
+.blog-card:hover {
+  transform: translateY(-3px);
+}
+
+
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;    /* a little breathing room */
+}
+
+.username {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 0.3rem;
+  /* whatever existing styles you have */
+}
+
+.post-date {
+  position: absolute;
+  right: 1rem;
+  top: 10%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Title of the post */
+.blog-card .post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  margin-top: 1rem;
+  color: #333;
+}
+
+/* The truncated content */
+.blog-card .post-content {
+  flex: 1; /* let it grow */
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+/* "Read more" link */
+.blog-card .read-more {
+  font-size: 0.9rem;
+  color: #1565c0;
+  text-decoration: none;
+  margin-top: auto;
+}
+
+.blog-card .read-more:hover {
+  text-decoration: underline;
+}
+
+/* -----------------------------------------------------
+   4) AUTH SECTIONS (Login/Register)
+------------------------------------------------------ */
+
+/* The container that fills the whole screen and centers the card */
+.auth-section {
+  width: 100%;
+  height: 100vh;      
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* The white card for login/register */
+.auth-card {
+  background: #fff;           
+  width: 360px;              
+  padding: 2rem 2.5rem;      
+  border-radius: 10px;        
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+  text-align: left;
+}
+
+/* Form Title */
+.auth-card h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000; 
+}
+
+/* Form Container */
+.auth-form label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: #333; 
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* Optional password field container */
+.password-field {
+  position: relative;
+}
+
+/* Submit Button */
+.btn-submit {
+  width: 100%;
+  background-color: #1565c0; /* Example blue color */
+  color: #fff;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #0d47a1; 
+}
+
+/* Footer Text under the form */
+.auth-footer {
+  margin-top: 1.2rem;
+  font-size: 0.88rem;
+  text-align: center;
+  color: #555;
+}
+
+.auth-footer a {
+  color: #1565c0;
+  text-decoration: none;
+}
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* -----------------------------------------------------
+   5) FINAL OVERRIDES (READABILITY)
+------------------------------------------------------ */
+
+/* Force list-group items to also have white BG & black text */
+.list-group-item {
+  background-color: #fff !important; 
+  color: #000 !important;
+  padding: 1rem;
+}
+
+.no-posts-message {
+    color: black;
+    font-size: 16px; /* optional: control size */
+    text-align: center; /* optional: center it */
+    margin-top: 10px; /* optional: give some space */
+  }
+  
+
+/* If you have text elements .post-text or .post-content, ensure black text */
+.post-text,
+.post-content {
+  color: #000 !important;
+}
+
+/* Make .btn have black text if needed */
+.btn {
+  color: #000 !important;
+}
+
+/* "Read More" link in blue */
+.read-more {
+  color: #1565c0 !important; 
+  text-decoration: none;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ==============================
+   FINAL OVERRIDES
+============================== */
+
+/* 1) Change the font for the "Our Latest Blogs" heading */
+.blog-section-title,
+#postsSection h2 {
+  font-family: Geneva, Verdana, sans-serif !important; /* override previous font */
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: #333 !important;
+  margin-bottom: 1.5rem !important;
+  text-align: left !important; /* or center if you prefer */
+}
+
+/* 2) Subtle highlight behind the grid so white cards stand out */
+.blog-grid {
+  background: #f9f9f9 !important; /* a very light gray */
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+/* 3) Keep the individual cards white with black text */
+.post-card {
+  background: #fff !important;
+  color: #000 !important;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* softer shadow */
+}
+
+/* If you want to remove any leftover overlay in #postsSection */
+#postsSection.section-container::before {
+  background: none !important;
+  content: none !important;
+}
+
+#postsSection .section-content {
+  background: none !important;
+  color: #000 !important;
+}
+
+/* Make the Create Post heading bolder and larger (while staying white) */
+#createPostSection h3 {
+  color: #fff !important;         /* white text */
+  font-size: 1.8rem !important;   /* a bit larger than default */
+  font-weight: 700 !important;    /* bold */
+  margin-bottom: 1.2rem;          /* optional spacing */
+}
+
+
+
+.list-group-item .post-text {
+  margin-bottom: 0.5rem; /* small spacing below content */
+}
+
+#postsSection.section-container {
+  color: #fff; /* so text remains readable if needed */
+}
+
+/* Optional: an overlay if you want a semi-transparent look */
+#postsSection.section-container::before {
+  content: "";
+  position: absolute;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6); 
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure the inner content is above the overlay */
+#postsSection .section-content {
+  position: relative;
+  z-index: 1; /* above overlay */
+}
+
+/* Change the .btn-success color from Bootstrap green to a custom color */
+.btn-success {
+  background-color: #ffcc00 !important; 
+  /* match the border color */
+  color: #080000 !important;               /* black text */
+}
+
+/* ==============================
+   CREATE POST SECTION
+============================== */
+/* common bg for all sections*/
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e7c6f8 0%, #f8e7b9 50%, #f7d98c 100%);
+  /* You can tweak the colors/angle as you like */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+/* Remove any leftover overlay in Create Post if you had a ::before */
+#createPostSection.section-container::before {
+  content: none !important;
+  background: none !important;
+  pointer-events: none;
+  backdrop-filter: none;
+}
+
+/* Translucent gray box for createPostSection .section-content */
+#createPostSection .section-content {
+  position: relative;
+  z-index: 1;
+  margin-top: 4.5rem; 
+  background: rgba(0, 0, 0, 0.3) !important; /* translucent dark/gray box */
+  color: #fff !important;                   /* white text for contrast */
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  backdrop-filter: none !important;         /* remove any blur effect */
+}
+
+/* ==============================
+   PROFILE SECTION
+============================== */
+
+
+/* Remove any leftover overlay in Profile if you had a ::before */
+#profileSection.section-container::before {
+  content: none !important;
+  background: none !important;
+  pointer-events: none;
+  backdrop-filter: none;
+}
+
+/* Translucent gray box for profileSection .section-content */
+#profileSection .section-content {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.3) !important; 
+  color: #fff !important;
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  backdrop-filter: none !important;
+}
+
+.post-category-small {
+  font-size: 0.8rem;       /* smaller than normal text */
+  color: #d66823 !important;  /* a subtle gray color so it’s not too bright */
+  margin-left: 0.5rem;     /* small spacing from the title */
+  background: none;        /* no background so it blends with white card */
+}
+
+/* Target paragraphs inside the saved posts list items */
+#savedPostsList li p {
+  color: #000 !important; /* black text so it's visible on white bg */
+}
+
+/* Title styling for both main blog posts and saved posts */
+.post-title {
+  font-size: 1.2rem !important; 
+  color: #ffcc00 !important;   
+  text-decoration: underline !important; 
+  margin-bottom: 0.5rem;          /* small space below title */
+}
+/* Saved Posts Content smaller than main blog posts */
+#savedPostsGrid .post-title {
+  font-size: 0.9rem !important; 
+}
+
+/* Prevent the child element from inheriting the underline */
+
+.post-title .post-category-small {
+  display: inline-block;        /* break inheritance for text decoration */
+  text-decoration: none !important;
+}
+#viewSavedBtn {
+  background-color: #bdc0c1 !important; /* e.g., a nice blue shade */
+}
+
+/* save icon styling */
+.bookmark-icon {
+  position: absolute;
+  right: 0.8rem;  /* spacing from right edge */
+  bottom: 0.8rem; /* spacing from bottom edge */
+  font-size: 1.4rem; /* slightly bigger icon */
+  color: #1565c0; /* or your preferred color */
+}
+.bookmark-icon:hover {
+  color: #0d47a1;
+}
+
+
+/* Profile Layout Container */
+.profile-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Profile Header - top section with pic + big username */
+#profileHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Big Username style */
+#profileUsername {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  color: #333; /* or whichever color you want */
+}
+
+/* A container that can center or position the profile pic below "Your Profile" */
+.profile-pic-container {
+  margin: 1.5rem 0; /* spacing from the heading */
+  display: flex;
+  justify-content: center; /* center horizontally */
+}
+
+/* Wrapper ensures the circular shape and relative positioning */
+.profile-pic-wrapper {
+  position: relative; /* IMPORTANT: so the .camera-menu can be placed absolutely */
+  width: 120px;   /* adjust size as you want */
+  height: 120px;
+  border-radius: 50%;
+  background: #f0f0f0; /* fallback gray if no image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The actual image is circle-cropped */
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Camera icon overlay in the bottom-right, fully visible as a small circle */
+.camera-icon {
+  position: absolute;
+  bottom: 6px; 
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  background: #fff;         /* bright white background circle */
+  color: #1565c0;           /* icon color */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1001; /* ensure icon is above the menu */
+}
+
+/* Increase icon size, or keep as is */
+.camera-icon i {
+  font-size: 1.2rem;
+}
+
+/* Hover effect for the icon circle */
+.camera-icon:hover {
+  background-color: #f0f0f0; 
+}
+
+/* -------------------------------
+   Camera Menu (dropdown) styling
+--------------------------------- */
+
+/* The menu container itself */
+.camera-menu {
+  position: absolute;
+  top: calc(100% + 6px); /* just below the camera icon, adjust if needed */
+  right: 0;
+  background: #fff;      /* white background */
+  color: #000;           /* black text */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index:1000 ;
+  display: none;         /* hidden by default */
+  min-width: 160px;      /* ensure enough width for text */
+  white-space: nowrap;
+}
+
+/* If you toggle a class like .show to display it, you can do: */
+.camera-menu.show {
+  display: block;
+}
+
+/* Each clickable item in the menu */
+.camera-menu-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Hover effect for each menu item */
+.camera-menu-item:hover {
+  background: #f0f0f0;
+}
+
+
+/* The parent container for your menu items */
+#profileMenu {
+  display: flex;              /* you can do flex or block */
+  flex-direction: column;     /* stack them vertically */
+  align-items: center;        /* center horizontally */
+  gap: 0.75rem;               /* space between items */
+  margin-top: 1.5rem;         /* spacing from top */
+}
+
+/* Each menu item - bigger text, bold, no background */
+.profile-menu-item {
+  display: inline-flex;       /* let icon + text be side by side */
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;          /* bigger text */
+  font-weight: 700;           /* bold */
+  color: #fff;                /* white text (assuming your background is dark) */
+  text-decoration: none;
+  cursor: pointer;
+
+  /* remove any background or border radius you had */
+  background: none; 
+  margin: 0;           
+  border: 2px solid transparent;  /* if you want a subtle border on hover, see below */
+  padding: 0.5rem 1rem;       /* some spacing around text */
+  border-radius: 4px;         /* optional small corner rounding */
+}
+
+/* The icon is bigger too */
+.profile-menu-item i {
+  font-size: 1.4rem;
+  margin-right: 0.5rem;
+}
+
+/* Hover effect: highlight text or add border */
+.profile-menu-item:hover {
+  border: 2px solid #fff;     /* show a white border on hover, or remove if you want no effect */
+  background: rgba(255, 255, 255, 0.1); /* a subtle highlight if you want */
+}
+
+
+/* Optional styling for your form inputs, etc. */
+.form-control {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+
+/* The normal sub-section (Your Posts, Saved Posts) */
+.profile-subsection {
+  display: block;
+  background: #eee;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+/* Change the color of all h4 headings in .profile-subsection */
+.profile-subsection h4 {
+  color: #007bff; /* or any color code you like */
+}
+
+/* The slide-in panel for Edit Profile */
+.slide-panel {
+  position: fixed;            /* so it sits on top of the main content */
+  top: 0;
+  right: -100%;               /* start off-screen to the right */
+  width: 400px;               /* how wide the panel is */
+  height: 100vh;              /* full viewport height */
+  background: #f8f8f8;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  padding: 1.5rem;
+  overflow-y: auto;
+  transition: right 0.4s ease-in-out;
+  z-index: 999;
+}
+
+/* When we add a .show class, it slides in */
+.slide-panel.show {
+  right: 0;
+}
+
+/* The close (X) button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+#profileMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Add a uniform gap between items */
+  gap: 0.5rem; /* Adjust as needed (e.g., 0.75rem, 1rem) */
+}
+
+#profileName{
+  color: #e6da36; /* e.g., a bright orange color for the typed text */
+}
+
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e7c6f8 0%, #f8e7b9 50%, #f7d98c 100%);
+  /* You can tweak the colors/angle as you like */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+
+/* Manage Users: Search input */
+.form-group {
+  margin-bottom: 1rem;
+}
+#userSearchInput {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th,
+.table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Make usernames look clickable */
+.username-cell {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Modal overlay */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal.hidden {
+  display: none;
+}
+/* Modal content box */
+.modal-content {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 6px;
+  width: 300px; max-width: 90%;
+  position: relative;
+}
+/* Close “×” button */
+.modal-close {
+  position: absolute;
+  top: 0.5rem; right: 0.75rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Promote = green, Demote = orange */
+button[data-action="promote"] {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button[data-action="demote"] {
+  background-color: #fd7e14;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button[data-action="delete-user"] {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+/* Delete button on blog cards */
+.blog-card button.delete-btn {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+/* Manage Users Section */
+#adminUsersSection {
+  display: none; /* default state: hidden */
+  z-index: 10;
+  position: relative;
+  padding: 2rem;
+  background-color: #fff;
+  color: #000;
+  text-align: left;
+  min-height: 80vh;
+}
+
+/* Optional: Remove any background overlays from section-container styling */
+#adminUsersSection.section-container::before {
+  content: none !important;
+  background: none !important;
+}
+
+/* Table inside Admin Users Section */
+#adminUsersTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #fefefe;
+}
+
+#adminUsersTable th,
+#adminUsersTable td {
+  border: 1px solid #ccc;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: #000;
+  background-color: #fff;
+}
+
+#adminUsersTable th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+

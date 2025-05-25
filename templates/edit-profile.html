@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Bootstrap CSS (Optional) -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+  <!-- Bootstrap Icons (Optional) -->
+  <link 
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
+  <style>
+    <style>
+  body {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  body.fade-out {
+    opacity: 0;
+  }
+
+    /* Reset and base styles */
+    body {
+        background: url("/static/images/blogpost.jpeg") no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        color: white;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
+    body.fade-out {
+        opacity: 0;
+    }
+
+    /* Header styles */
+    .edit-profile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .edit-profile-header h4 {
+        color: #ffcc00;
+        margin: 0;
+    }
+
+    .edit-profile-header .back-btn,
+    .edit-profile-header .save-btn {
+        color: #ffcc00;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .edit-profile-header .back-btn:hover,
+    .edit-profile-header .save-btn:hover {
+        background: rgba(255, 204, 0, 0.2);
+    }
+
+    /* Container styles */
+    .edit-profile-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Form styles */
+    .edit-profile-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .edit-profile-form label {
+        color: white;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .edit-profile-form input {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .edit-profile-form input:focus {
+        outline: none;
+        border-color: #ffcc00;
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .edit-profile-form input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Profile photo styles */
+    .profile-photo-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 2rem 0;
+    }
+
+    .profile-photo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #eee;
+        border: 3px solid #ffcc00;
+    }
+</style>
+</head>
+<body>
+
+  <!-- Top bar with Back arrow on left, Save on right -->
+  <div class="edit-profile-header">
+    <!-- Back Button -->
+    <button class="back-btn" id="goBackBtn">
+      <i class="bi bi-arrow-left"></i> <!-- or just &lt; symbol if you prefer -->
+    </button>
+    <h4>Edit Profile</h4>
+    <!-- Save Button -->
+    <button class="save-btn" id="saveProfileBtn">Save</button>
+  </div>
+
+  <div class="edit-profile-container">
+    
+    <!-- Edit Username Form -->
+    <form id="editProfileForm" class="edit-profile-form">
+      <label for="newUsername">New Username</label>
+      <input 
+        type="text" 
+        id="newUsername" 
+        placeholder="Enter new username"
+        required
+      />
+
+      <!-- Name field (optional) -->
+    <label for="newName">Name (optional)</label>
+    <input 
+      type="text" 
+      id="newName" 
+      placeholder="Enter your display name (optional)"
+    />
+    
+  <label for="newEmail">Email (optional)</label>
+  <input 
+    type="email" 
+    id="newEmail" 
+    name="new_email"
+    placeholder="Enter your email (optional)"
+    />
+  </form>
+</div>
+  
+  <script>
+    // Fade-in when the page loads
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.style.opacity = 1;
+  });
+
+  // Fade-out and then navigate back
+  function fadeBack() {
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+      window.history.back();
+    }, 500); // Match the CSS transition time
+  }
+    // "Back" button: navigate back or to main page
+    const goBackBtn = document.getElementById("goBackBtn");
+    if (goBackBtn) {
+      goBackBtn.addEventListener("click", (e) => {
+        // Option A: Go back one page in history
+        e.preventDefault();
+        fadeBack();
+      });
+    }
+
+    // Function to fetch current profile and pre-fill the form
+    async function fetchProfileForEdit() {
+      try {
+        const response = await fetch("/profile", { credentials: "include" });
+        if (!response.ok) {
+          const errData = await response.json();
+          alert(errData.detail || "Error fetching profile");
+          return;
+        }
+        const data = await response.json();
+        // Pre-fill fields if they exist
+        if (data.name) {
+          document.getElementById("newName").value = data.name;
+        }
+        if (data.username) {
+          document.getElementById("newUsername").value = data.username;
+        }
+        if (data.email) {
+          document.getElementById("newEmail").value = data.email;
+        }
+      } catch (error) {
+        alert("Error fetching profile: " + error.message);
+      }
+    }
+
+    // Run the fetch function on page load
+    window.addEventListener("DOMContentLoaded", fetchProfileForEdit);
+
+    // "Save" button logic: triggers form submission
+    const saveProfileBtn = document.getElementById("saveProfileBtn");
+    const editProfileForm = document.getElementById("editProfileForm");
+    
+
+    if (saveProfileBtn && editProfileForm) {
+      saveProfileBtn.addEventListener("click", async () => {
+        // 1) Grab the values (trim them if you like)
+        const newName = document.getElementById("newName").value.trim();
+        const newUsername = document.getElementById("newUsername").value.trim();
+        const newEmail = document.getElementById("newEmail").value.trim();
+      
+        // 2) Prepare FormData
+        const formData = new FormData();
+        formData.append("new_name", newName);       // name field
+        formData.append("new_username", newUsername); // username field
+        formData.append("new_email", newEmail);
+      
+
+        try {
+          const response = await fetch("/edit_profile", {
+            method: "PUT",
+            credentials: "include",
+            body: formData
+          });
+
+          if (!response.ok) {
+            const errData = await response.json();
+            alert(errData.detail || "Error editing profile");
+            return;
+          }
+
+          const data = await response.json();
+          alert(data.message || "Profile updated successfully!");
+
+          // Go back 
+          fadeBack();
+
+        } catch (err) {
+          console.error("Error editing profile:", err);
+          alert("Error editing profile: " + err.message);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
