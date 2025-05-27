@@ -18,18 +18,14 @@ const navLogout = document.getElementById("navLogout");
 const navPosts = document.getElementById("navPosts");
 const navProfile = document.getElementById("navProfile");
 const navCreatePost = document.getElementById("navCreatePost");
+const navManageUsers = document.getElementById("navManageUsers");
 const signUpLink = document.getElementById("signUpLink");
 const signInLink = document.getElementById("signInLink");
 
-const menuYourPosts = document.getElementById("menuYourPosts");
-const menuEditProfile = document.getElementById("menuEditProfile");
-console.log("menuEditProfile =", menuEditProfile);
-const menuSavedPosts = document.getElementById("menuSavedPosts");
 
 // Grab the "Change Password" menu item
-const menuChangePassword = document.getElementById("menuChangePassword");
 const changePasswordSection = document.getElementById("changePasswordSection");
-const changePasswordForm = document.getElementById("changePasswordForm");
+//const changePasswordForm = document.getElementById("changePasswordForm");
 
 const yourPostsSection = document.getElementById("yourPostsSection");
 const closeEditProfile = document.getElementById("closeEditProfile");
@@ -94,13 +90,7 @@ function hideAllProfileSubsections() {
   document.getElementById("savedPostsSection").classList.add("hidden");
 }
 
-/*function showProfileSubsection(sectionId) {
-  hideAllProfileSubsections();
-  const target = document.getElementById(sectionId);
-  if (target) {
-    target.classList.remove("hidden");
-  }
-} */
+
 
 function toggleProfileSubsection(sectionId) {
   const target = document.getElementById(sectionId);
@@ -266,9 +256,13 @@ navPosts.addEventListener("click", () => {
   fetchPosts();
 });
 
-navProfile.addEventListener("click", () => {
+navProfile.addEventListener("click", async() => { // await the new user, then reload
   showSection("profileSection");
-  fetchProfileInfo(); // ✅ Load profile data
+  await checkUserStatus();
+  await fetchProfileInfo(); // ✅ Load profile data
+  fetchProfileForEdit();
+  loadUserPosts();
+  loadSavedPosts();
 });
 
 signUpLink.addEventListener("click", (e) => {
@@ -321,6 +315,8 @@ navLogout.addEventListener("click", async () => {
     navPosts       .classList.add("hidden");
     navCreatePost  .classList.add("hidden");
     navProfile     .classList.add("hidden");
+    // reset the global so no one can accidentally write into the old user’s bucket
+  currentUserId = null;
     navManageUsers .classList.add("hidden");
 
     // 6. Send them back to Home
@@ -520,7 +516,7 @@ async function fetchPosts() {
         currentUserRole === "admin" ||
         (currentUserRole === "user" && post.user_id === currentUserId);
 
-      // create Create a blog card
+      //Create a blog card
       const card = document.createElement("div");
       card.classList.add("blog-card");
       card.style.position = "relative"; // Ensure the card is relative for absolute positioning
@@ -546,7 +542,7 @@ async function fetchPosts() {
         }
 
         ${canDelete
-          ? `<button class="delete-btn" data-id="${post.id}">Delete</button>`
+          ? `<button class="delete-btn" data-id="${post._id}">Delete</button>`
           : ""
         }
 
@@ -563,6 +559,8 @@ async function fetchPosts() {
 
       // append to the grid
       grid.appendChild(card);
+
+      attachPostButtonListeners();
 
       // read more logic
       if (isTruncated) { //content is initialy not expanded if user clicks then it expands and shows 'show less' option
@@ -593,7 +591,8 @@ document.querySelectorAll(".bookmark-icon").forEach(icon => {
     const postContent = this.dataset.content;
     const userName = this.dataset.username;
 
-    let savedPosts = JSON.parse(localStorage.getItem("savedPosts")) || [];
+    const key = getSavedKey(); // ← use per-user key
+    let savedPosts = JSON.parse(localStorage.getItem(key)) || [];
 
     // Check if already saved
     const alreadySaved = savedPosts.some(sp => sp.id === postId);
@@ -609,7 +608,7 @@ document.querySelectorAll(".bookmark-icon").forEach(icon => {
       content: postContent, 
       username: userName
     });
-    localStorage.setItem("savedPosts", JSON.stringify(savedPosts));
+    localStorage.setItem(key, JSON.stringify(savedPosts));
 
     alert("Post saved successfully!");
 
@@ -687,7 +686,7 @@ async function editPost(id, title, content) {
 }
 
 async function deletePost(id) {
-  if (!confirm("🗑️ Are you sure you want to delete this post?")) return;
+  // if (!confirm("🗑️ Are you sure you want to delete this post?")) return;
 
   try {
     const response = await fetch(`/blog_posts/${id}`, {
@@ -707,35 +706,7 @@ async function deletePost(id) {
   }
 }
 
-// 4) Attach clicks
-if (menuYourPosts) {
-  menuYourPosts.addEventListener("click", () => {
-    // Show the "Your Posts" sub-section
-    toggleProfileSubsection("yourPostsSection");
-    // Load or refresh user's own posts
-    loadUserPosts();
-  });
-}
-/*if (menuEditProfile) {
-  menuEditProfile.addEventListener("click", () => {
-    showProfileSubsection("editProfileSection");
-  });
-} */
 
-// Show/hide logic
-if (menuChangePassword) {
-  menuChangePassword.addEventListener("click", () => {
-    toggleProfileSubsection("changePasswordSection");
-  });
-}
-
-if (menuSavedPosts) {
-  menuSavedPosts.addEventListener("click", () => {
-    toggleProfileSubsection("savedPostsSection");
-    // Load saved posts if needed
-    loadSavedPosts();
-  });
-}
 
 // Handle form submission
 if (changePasswordForm) {
@@ -769,16 +740,29 @@ if (changePasswordForm) {
 }
 
 
-
+function getSavedKey() {
+  if (!currentUserId) {
+    console.error("🚨 getSavedKey(): no currentUserId!");
+    throw new Error("You must be logged in to save posts");
+  }
+  const key = `savedPosts_${currentUserId}`;
+  console.log("🔑 getSavedKey() →", key);
+  return key;
+}
 //To get user profileInfo
 function loadSavedPosts() {
+
   const savedPostsGrid = document.getElementById("savedPostsGrid");
   if (!savedPostsGrid) return;
 
   savedPostsGrid.innerHTML = ""; // Clear old posts
 
-  // 1) Retrieve from localStorage
-  let savedPosts = JSON.parse(localStorage.getItem("savedPosts")) || [];
+  // 1) Retrieve from localStorage using per-user key
+  const key = getSavedKey();
+  const savedPosts = JSON.parse(localStorage.getItem(key)) || []
+  
+  console.log("Loading saved posts for user:", currentUserId);
+  console.log("Found this array:", savedPosts);
 
   // 2) If no saved, show message
   if (savedPosts.length === 0) {
@@ -861,11 +845,12 @@ function loadSavedPosts() {
 
 // to remove posts from saved
 function removeSavedPost(index) {
-  let savedPosts = JSON.parse(localStorage.getItem("savedPosts")) || [];
+  const key = getSavedKey();
+  let savedPosts = JSON.parse(localStorage.getItem(key)) || [];
   if (index >= 0 && index < savedPosts.length) {
     // Remove the post at this index
     savedPosts.splice(index, 1);
-    localStorage.setItem("savedPosts", JSON.stringify(savedPosts));
+    localStorage.setItem(key, JSON.stringify(savedPosts));
     // Re-load the saved posts to reflect changes
     loadSavedPosts();
   }
@@ -881,6 +866,8 @@ function removeSavedPost(index) {
     const truncated = words.slice(0, limit).join(" ") + "...";
     return { shortText: truncated, isTruncated: true };
   }
+
+
 
 async function loadUserPosts() {
   try {
@@ -1140,11 +1127,191 @@ if (removePhoto) {
   });
 }
 
+// c) Tab behavior
+  const tabButtons = document.querySelectorAll(".profile-tabs .tab-button");
+  const tabPanels  = document.querySelectorAll(".tab-panel");
+
+  // 1) No button starts active
+  tabButtons.forEach(b => b.classList.remove("active"));
+  // All panels start hidden
+  tabPanels.forEach(p => p.classList.add("hidden"));
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.dataset.target;
+      const panel   = document.getElementById(targetId);
+      const isOpen  = btn.classList.contains("active");
+
+      // 2) If already open, just close it
+      if (isOpen) {
+        btn.classList.remove("active");
+        panel.classList.add("hidden");
+        return;
+      }
+      // 3) Otherwise, close everything…
+      tabButtons.forEach(b => b.classList.remove("active"));
+      tabPanels.forEach(p => p.classList.add("hidden"));
+      // 4) …then open this one
+      btn.classList.add("active");
+      panel.classList.remove("hidden");
+      // show/hide panels
+      // Load content for this tab:
+      if (targetId === "yourPostsPanel") {
+        loadUserPosts();
+      } else if (targetId === "savedPostsPanel") {
+        loadSavedPosts();
+      } else if (targetId === "editProfilePanel") {
+      // Re-load this user’s profile into the edit form every time
+      fetchProfileForEdit();
+      }
+      // changePasswordPanel has no preload
+    });
+});
+
+// 1) Fetch current profile & pre-fill the form
+async function fetchProfileForEdit() {
+  try {
+    const res = await fetch("/profile", {
+      method: "GET",
+      credentials: "include"
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      return alert(err.detail || "Error fetching profile");
+    }
+    const data = await res.json();
+    // Helper to apply faded style
+    function applyFetched(inputId, value) {
+      const input = document.getElementById(inputId);
+      if (!input || !value) return;
+      input.value = value;
+      input.classList.add("fetched-value");
+      // On first user edit, remove the faded style
+      input.addEventListener("input", () => {
+        input.classList.remove("fetched-value");
+      }, { once: true });
+    }
+
+    applyFetched("newName",     data.name);
+    applyFetched("newUsername", data.username);
+    applyFetched("newEmail",    data.email);
+
+  } catch (err) {
+    console.error("fetchProfileForEdit:", err);
+    alert("Error fetching profile: " + err.message);
+  }
+}
+
+// Run on page load (tabs are already in DOM)
+//window.addEventListener("DOMContentLoaded", fetchProfileForEdit);
+
+// 2) “Save Changes” button handler
+const saveProfileBtn = document.getElementById("saveProfileBtn");
+if (saveProfileBtn) {
+  saveProfileBtn.addEventListener("click", async () => {
+    // Grab & trim values
+    const nameEl     = document.getElementById("newName");
+    const userEl     = document.getElementById("newUsername");
+    const emailEl    = document.getElementById("newEmail");
+    const newName     = nameEl    ? nameEl.value.trim()     : "";
+    const newUsername = userEl    ? userEl.value.trim()     : "";
+    const newEmail    = emailEl   ? emailEl.value.trim()    : "";
+
+    // Build FormData with only non-empty fields
+    const fd = new FormData();
+    if (newName)     fd.append("new_name",      newName);
+    if (newUsername) fd.append("new_username",  newUsername);
+    if (newEmail)    fd.append("new_email",     newEmail);
+
+    try {
+      const res = await fetch("/edit_profile", {
+        method: "PUT",
+        credentials: "include",
+        body: fd
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.detail || "Error editing profile");
+
+      alert(result.message || "Profile updated successfully!");
+      // 2) Close the Edit Profile panel
+      const editBtn   = document.querySelector('.tab-button[data-target="editProfilePanel"]');
+      const editPanel = document.getElementById('editProfilePanel');
+      if (editBtn && editPanel) {
+        editBtn.classList.remove('active');
+        editPanel.classList.add('hidden');
+      }
+
+      // 5) (Optional) Re-fetch to update header/info
+      await fetchProfileForEdit();
+
+    } catch (err) {
+      console.error("Error editing profile:", err);
+      alert("Error editing profile: " + err.message);
+    }
+  });
+}
+
+
+// ─── Change Password submission ───
+;(function(){
+  const savePasswordBtn   = document.getElementById("savePasswordBtn");
+  const form = document.getElementById("changePasswordForm");
+  if (!savePasswordBtn || !changePasswordForm) return;
+
+  savePasswordBtn.addEventListener("click", async (e) => {
+    e.preventDefault(); // stop the native form submission
+
+    const oldPwd     = document.getElementById("oldPassword")?.value.trim()     || "";
+    const newPwd     = document.getElementById("newPassword")?.value.trim()     || "";
+    const confirmPwd = document.getElementById("confirmPassword")?.value.trim() || "";
+
+    // 1) Basic validation
+    if (!oldPwd || !newPwd || !confirmPwd) {
+      return alert("Please fill out all fields.");
+    }
+    if (newPwd !== confirmPwd) {
+      return alert("New passwords do not match.");
+    }
+
+    // 2) Build the payload
+    const fd = new FormData();
+    fd.append("current_password", oldPwd);
+    fd.append("new_password",     newPwd);
+
+    try {
+      // 3) Send to your FastAPI endpoint
+      const res  = await fetch("/change_password", {
+        method: "PUT",
+        credentials: "include",
+        body: fd
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Error changing password");
+
+      // 4) Success
+      alert(data.message || "Password updated successfully!");
+
+      // 5) Collapse the Change Password tab
+      const btn   = document.querySelector('.tab-button[data-target="changePasswordPanel"]');
+      const panel = document.getElementById("changePasswordPanel");
+      if (btn && panel) {
+        btn.classList.remove("active");
+        panel.classList.add("hidden");
+      }
+    } catch (err) {
+      console.error("Change password failed:", err);
+      alert("Error changing password: " + err.message);
+    }
+  });
+})();
+
+
+
 
 
 // NAV ITEMS FOR ADMIN SECTIONS
-console.log("⏳ Adding click listener to navManageUsers");
-const navManageUsers = document.getElementById("navManageUsers");
+//console.log("⏳ Adding click listener to navManageUsers");
+//const navManageUsers = document.getElementById("navManageUsers");
 console.log("navManageUsers element is:", navManageUsers);
 if (navManageUsers) {
   navManageUsers.addEventListener("click", () => {

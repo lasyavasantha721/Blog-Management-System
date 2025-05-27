@@ -293,50 +293,123 @@
       </div>
     </div>
 
-    <!-- A vertical menu of clickable items -->
-    <div id="profileMenu" class="mt-3">
-      <div class="profile-menu-item" id="menuYourPosts">
-        <i class="bi bi-collection"></i>
-        <span>Your Posts</span>
-      </div>
+    <!-- Tab buttons -->
+    <div class="profile-tabs">
+      <button class="tab-button" data-target="yourPostsPanel">
+        <i class="fa fa-briefcase"></i> Your Posts
+      </button>
+      <button class="tab-button" data-target="editProfilePanel">
+        <i class="fa fa-edit"></i> Edit Profile
+      </button>
+      <button class="tab-button" data-target="changePasswordPanel">
+        <i class="fa fa-key"></i> Change Password
+      </button>
+      <button class="tab-button" data-target="savedPostsPanel">
+        <i class="fa fa-bookmark"></i> Saved Posts
+      </button>
+    </div>
 
-      <!-- 1) Edit Profile: This now navigates to a separate page -->
-      <a href="/edit-profile" class="profile-menu-item">
-        <i class="bi bi-pencil-square"></i>
-        <span>Edit Profile</span>
-      </a>
-
-      <!-- 2) New menu item: "Change Password"  -->
-      <a href="/change-password" class="profile-menu-item">
-        <i class="bi bi-key"></i>
-        <span>Change Password</span>
-      </a>
-      
-
-      <!-- 3) Saved Posts item -->
-      <div class="profile-menu-item" id="menuSavedPosts">
-        <i class="bi bi-bookmark-star"></i>
-        <span>Saved Posts</span>
+    <!-- Panels: paste your existing markup inside each panel -->
+    <div id="yourPostsPanel" class="tab-panel hidden">
+      <!-- ↑ Existing "Your Posts" content goes here unchanged ↓ -->
+      <div class="profile-content">
+        <!-- Example: list of posts -->
+        <!-- ... -->
+        <!-- List of the user’s own posts -->
+        <ul id="userPostsList" class="list-group">
+          <!-- loadUserPosts() will inject <li> items here -->
+        </ul>
       </div>
     </div>
 
-    <!-- Content Area: sub-sections hidden by default -->
-    <div id="profileContentArea">
-      <!-- 1) Your Posts sub-section -->
-      <div id="yourPostsSection" class="profile-subsection hidden">
-        <h4>Your Posts</h4>
-        <div id="userPostsList" class="mt-2"></div> 
-      </div>
-
+    <div id="editProfilePanel" class="tab-panel hidden">
+      <div class="edit-profile-container">
+        <form id="editProfileForm" class="edit-profile-form">
+          <label for="newUsername">New Username</label>
+          <input 
+            type="text" 
+            id="newUsername" 
+            placeholder="Enter new username"
+            required
+          />
+          <label for="newName">Name</label>
+          <input 
+            type="text" 
+            id="newName" 
+            placeholder="Enter your display name (optional)"
+          />
+          
+          <label for="newEmail">New Email</label>
+          <input 
+            type="email" 
+            id="newEmail" 
+            name="new_email"
+            placeholder="Enter your email (optional)"
+          />
+      <!-- ↑ Your current Edit Profile form and styling → paste below unchanged ↓ -->
       
-      <!-- 3) Saved Posts sub-section -->
-      <div id="savedPostsSection" class="profile-subsection hidden">
-        <h4>Saved Posts</h4>
-        <div id="savedPostsGrid" class="blog-grid mt-2"></div>
+          <button 
+            type="button"
+            id="saveProfileBtn" 
+            class="save-btn"
+          >
+            Save Changes
+          </button>
+            <!-- Your input fields, labels, buttons, etc. -->
+        </form>
+      </div>
+    </div>
+
+    <div id="changePasswordPanel" class="tab-panel hidden">
+      <div class="edit-profile-container"><!-- reuse light-theme container -->
+        <form id="changePasswordForm" class="edit-profile-form"><!-- reuse same form styles -->
+          
+          <label for="oldPassword">Current Password</label>
+          <input 
+            type="password" 
+            id="oldPassword" 
+            placeholder="Enter your current password" 
+            required 
+          />
+
+          <label for="newPassword">New Password</label>
+          <input 
+            type="password" 
+            id="newPassword" 
+            placeholder="Enter a new password" 
+            required 
+          />
+
+          <label for="confirmPassword">Confirm New Password</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            placeholder="Re-type your new password" 
+            required 
+          />
+
+          <button type="button" id="savePasswordBtn" class="save-btn">Update Password</button>
+        </form>
+      </div>
+    </div>
+
+
+        
+
+    <div id="savedPostsPanel" class="tab-panel hidden">
+      <!-- ↑ Existing "Saved Posts" content goes here unchanged ↓ -->
+      <div class="profile-content">
+        <!-- Example: list of saved posts -->
+        <!-- ... -->
+        <!-- Grid of saved posts -->
+        <div id="savedPostsGrid" class="blog-grid mt-2">
+          <!-- loadSavedPosts() will inject .blog-card divs here -->
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 
 
 

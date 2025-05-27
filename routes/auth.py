@@ -31,6 +31,8 @@ router.mount("/static", StaticFiles(directory="static"), name="static")
 # Initialize Jinja2 templates for rendering HTML
 templates = Jinja2Templates(directory="templates")
 
+base_url = os.getenv("BASE_URL")
+
 @router.get("/request_password_reset")
 def request_password_reset(request: Request):
     return templates.TemplateResponse("forgot_password.html", {"request": request})
@@ -105,9 +107,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         COOKIE_NAME,
         token,          # no “Bearer ” prefix if you like
         httponly=True,
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        samesite="Lax",
-        secure=True,
+        samesite="Lax"
     )
     return resp
 
@@ -199,7 +199,7 @@ def request_password_reset(
     # 3) Generate a reset token + link to your front‐end reset page
     token = create_reset_token(user_doc["_id"])
     # Adjust the URL to wherever your static reset form lives:
-    reset_link = f"http://localhost:8000/reset_password?token={token}"
+    reset_link = f"{Base_url}/reset_password?token={token}"
 
     try:
         send_reset_email(email, reset_link)

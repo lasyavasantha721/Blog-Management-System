@@ -98,7 +98,7 @@ def edit_profile(
         updates
     )
     if modified == 0:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update profile")
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="No changes were made to the profile")
 
     # 4) Return the JSON your JS is looking for
     return {"message": "Profile updated successfully"}

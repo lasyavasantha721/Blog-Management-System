@@ -594,6 +594,7 @@ body {
   padding: 40px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   backdrop-filter: none !important;
+  margin-top: 1.5rem; 
 }
 
 .post-category-small {
@@ -761,45 +762,6 @@ body {
 }
 
 
-/* The parent container for your menu items */
-#profileMenu {
-  display: flex;              /* you can do flex or block */
-  flex-direction: column;     /* stack them vertically */
-  align-items: center;        /* center horizontally */
-  gap: 0.75rem;               /* space between items */
-  margin-top: 1.5rem;         /* spacing from top */
-}
-
-/* Each menu item - bigger text, bold, no background */
-.profile-menu-item {
-  display: inline-flex;       /* let icon + text be side by side */
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;          /* bigger text */
-  font-weight: 700;           /* bold */
-  color: #fff;                /* white text (assuming your background is dark) */
-  text-decoration: none;
-  cursor: pointer;
-
-  /* remove any background or border radius you had */
-  background: none; 
-  margin: 0;           
-  border: 2px solid transparent;  /* if you want a subtle border on hover, see below */
-  padding: 0.5rem 1rem;       /* some spacing around text */
-  border-radius: 4px;         /* optional small corner rounding */
-}
-
-/* The icon is bigger too */
-.profile-menu-item i {
-  font-size: 1.4rem;
-  margin-right: 0.5rem;
-}
-
-/* Hover effect: highlight text or add border */
-.profile-menu-item:hover {
-  border: 2px solid #fff;     /* show a white border on hover, or remove if you want no effect */
-  background: rgba(255, 255, 255, 0.1); /* a subtle highlight if you want */
-}
 
 
 /* Optional styling for your form inputs, etc. */
@@ -980,6 +942,7 @@ button[data-action="delete-user"] {
   background-color: #fff;
   color: #000;
   text-align: left;
+  margin-top: 4.5rem; 
   min-height: 80vh;
 }
 
@@ -1012,3 +975,210 @@ button[data-action="delete-user"] {
 }
 
 
+/* ─────── Profile Tabs ─────── */
+#profileSection .profile-tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin: 1.5rem 0 1rem;
+  padding: 0;
+}
+
+/* Tab buttons */
+#profileSection .profile-tabs .tab-button {
+  flex: 1;
+  background: transparent;
+  border: none;        
+  padding: 0.75rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: inherit;           /* inherit your section’s text color */
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+#profileSection .profile-tabs .tab-button:hover {
+  opacity: 1;
+}
+
+/* Active tab highlight */
+#profileSection .profile-tabs .tab-button.active {
+  border-bottom: 3px solid var(--accent-color, #007bff);
+  opacity: 1;
+}
+
+/* ─────── Tab Panels ─────── */
+#profileSection .tab-panel {
+  display: block;           /* default visible when no .hidden */
+}
+#profileSection .tab-panel.hidden {
+  display: none;
+}
+
+/* ─────── Utility: hide camera-menu by default ─────── */
+#profileSection .camera-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: none;
+  z-index: 10;
+}
+#profileSection .camera-menu.show {
+  display: block;
+}
+
+/* Optional: small padding around panel content */
+#profileSection .tab-panel .profile-content {
+  padding: 1rem 0;
+}
+
+
+/* —— In-tab Edit Profile form styles —— */
+#profileSection .edit-profile-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#profileSection .edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#profileSection .edit-profile-form label {
+  color: white;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+#profileSection .edit-profile-form input {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+#profileSection .edit-profile-form input:focus {
+  outline: none;
+  border-color: #ffcc00;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+#profileSection .edit-profile-form input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* “Save” button styling */
+#profileSection .save-btn {
+  align-self: flex-end;
+  margin: 0.8rem auto;            /* ✅ centers horizontally */
+  background:  #d71c48;
+  color : #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: none; 
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+#profileSection .save-btn:hover {
+  background: #d71c48;
+}
+
+/* —— Light-themed Edit Profile form —— */
+#profileSection .edit-profile-container {
+  background: rgb(255, 255, 255); /* light translucent white */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Labels in black */
+#profileSection .edit-profile-form label {
+  color: #000;
+}
+
+/* Inputs: light background, black text */
+#profileSection .edit-profile-form input {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: #000;
+}
+
+/* Input focus: subtle darker bg + blue accent */
+#profileSection .edit-profile-form input:focus {
+  outline: none;
+  border-color: #007bff;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder text darker */
+#profileSection .edit-profile-form input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+/* light, faded font for fetched values */
+#profileSection .edit-profile-form input.fetched-value {
+  color: rgba(0, 0, 0, 0.5);
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+/* Brighten the tab text and add a transparent “box” on hover */
+#profileSection .profile-tabs .tab-button {
+  color: #fff;      /* almost-white text */
+  transition: background 0.2s, color 0.2s;
+}
+
+#profileSection .profile-tabs .tab-button:hover {
+  background: rgba(255, 255, 255, 0.15); /* light translucent box */
+  border-radius: 0.25rem;
+  color:#fff;                           /* full white on hover */
+}
+
+#profileSection .profile-tabs .tab-button.active {
+  color: #fff;                           /* ensure active is pure white */
+}
+
+
+/* —— Saved Posts: shrink-wrap & center cards —— */
+#savedPostsGrid.blog-grid {
+  display: grid;
+  /* auto-fit collapses unused columns, so you only get as many tracks as items */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* center the tracks when you have fewer cards than will fill the row */
+  justify-content: center;
+  gap: 1.5rem;
+  /* remove any forced 100% width so it only grows as big as its content rows */
+  width: auto;
+  padding: 1.5rem;
+  background: #f9f9f9 !important;
+  border-radius: 8px;
+  margin: 0 auto; /* center the whole grid in its parent */
+}
+
+/* —— Card constraints & positioning —— */
+#savedPostsGrid .blog-card {
+  position: relative;     /* for absolutely-positioned username */
+  width: 100%;            /* let the track size the card */
+  max-width: 320px;       /* don’t let any card get too wide */
+}
+
+/* pin the username at top-right of each card */
+#savedPostsGrid .blog-card .username {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 0.85rem;
+  color: #666;
+}

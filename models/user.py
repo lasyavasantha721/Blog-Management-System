@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Literal
 from typing import Optional
-
+# Data model
 class RegisterRequest(BaseModel):
     username: str
     email: EmailStr
