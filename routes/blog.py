@@ -8,7 +8,6 @@ from bson import ObjectId
 from config.db import insert_one, find_many, update_one, delete_one, find_one
 from config.auth_deps import get_current_user_from_cookie
 from models.blogpost import BlogPostCreate, BlogPostOut
-from models.role import Role
 
 router = APIRouter(tags=["blog_posts"])
 
@@ -50,7 +49,6 @@ async def create_blog_post(
         "username": user_doc["username"],
         "created_at": now.isoformat(),  # match json_encoders or let Pydantic handle datetime
     }
-
 
 
 @router.get(
@@ -107,7 +105,7 @@ def update_blog_post(
 
     # 3) Authorization: owner or admin
     is_owner = str(post["user_id"]) == str(current_user["_id"])
-    is_admin = current_user["role"] == Role.ADMIN.value
+    is_admin = current_user["role"] == "admin"
     if not (is_owner or is_admin):
         raise HTTPException(status_code=403, detail="Not authorized to edit this post")
 
@@ -144,7 +142,7 @@ def delete_blog_post(
 
     # 3) Authorization: owner or admin
     is_owner = str(post["user_id"]) == current_user["_id"]
-    is_admin = current_user["role"] == Role.ADMIN.value
+    is_admin = current_user["role"] == "admin"
     if not (is_owner or is_admin):
         raise HTTPException(status_code=403, detail="Not authorized to delete this post")
 
@@ -155,43 +153,3 @@ def delete_blog_post(
 
     return {"message": "Blog post deleted successfully"}
 
-
-@router.put(
-    "/edit_profile",
-    status_code=status.HTTP_200_OK,
-)
-def edit_profile(
-    new_name:     str | None = Form(None),
-    new_username: str | None = Form(None),
-    new_email:    str | None = Form(None),
-    current_user            = Depends(get_current_user_from_cookie),
-):
-    # 1) Must be logged in
-    if not current_user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
-
-    # 2) Build the dict of fields to update
-    updates: dict = {}
-    if new_name and new_name.strip():
-        updates["name"] = new_name.strip()
-    if new_username and new_username.strip():
-        updates["username"] = new_username.strip()
-    if new_email and new_email.strip():
-        updates["email"] = new_email.strip().lower()
-
-    if not updates:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No changes provided")
-
-    # 3) Apply the update in Mongo
-    modified_count = update_one(
-        "users",
-        {"_id": ObjectId(current_user["_id"])},
-        updates
-    )
-
-    if modified_count == 0:
-        # Either the user didn’t exist (odd) or nothing actually changed
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found or no change made")
-
-    # 4) Return the exact JSON your JS wants
-    return {"message": "Profile updated successfully"}

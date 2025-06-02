@@ -4,12 +4,11 @@ from bson import ObjectId
 
 from config.db import find_one, find_many, update_one, delete_one
 from config.auth_deps import get_current_user_from_cookie
-from models.role import Role
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 def require_admin(user=Depends(get_current_user_from_cookie)):
-    if not user or user.get("role") != Role.ADMIN.value:
+    if not user or user.get("role") != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions")
     return user
 
@@ -46,9 +45,9 @@ def promote_user(user_id: str, admin=Depends(require_admin)):
     u = find_one("users", {"_id": ObjectId(user_id)})
     if not u:
         raise HTTPException(status_code=404, detail="User not found")
-    if u.get("role") == Role.ADMIN.value:
+    if u.get("role") == "admin":
         raise HTTPException(status_code=400, detail="User is already an admin")
-    modified = update_one("users", {"_id": ObjectId(user_id)}, {"role": Role.ADMIN.value})
+    modified = update_one("users", {"_id": ObjectId(user_id)}, {"role": "admin"})
     if not modified:
         raise HTTPException(status_code=500, detail="Failed to promote user")
     return {"message": "User promoted to admin"}
@@ -60,9 +59,9 @@ def demote_user(user_id: str, admin=Depends(require_admin)):
     u = find_one("users", {"_id": ObjectId(user_id)})
     if not u:
         raise HTTPException(status_code=404, detail="User not found")
-    if u.get("role") != Role.ADMIN.value:
+    if u.get("role") != "admin":
         raise HTTPException(status_code=400, detail="User is not an admin")
-    modified = update_one("users", {"_id": ObjectId(user_id)}, {"role": Role.USER.value})
+    modified = update_one("users", {"_id": ObjectId(user_id)}, {"role": 'user'})
     if not modified:
         raise HTTPException(status_code=500, detail="Failed to demote user")
     return {"message": "User demoted to user"}

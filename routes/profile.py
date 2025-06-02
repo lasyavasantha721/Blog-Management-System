@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Form, Request, Up
 from config.auth_deps import get_current_user_from_cookie, verify_password, hash_password
 from models.user import UserOut, UserProfileOut
 from bson import ObjectId
-from fastapi.templating import Jinja2Templates
+#from fastapi.templating import Jinja2Templates
 import os
 
 from config.db import find_many, update_one, find_one, get_collection
@@ -11,14 +11,6 @@ from config.db import find_many, update_one, find_one, get_collection
 
 router = APIRouter(tags=["profile"])
 
-templates = Jinja2Templates(directory="templates")
-
-@router.get("/edit-profile")
-def edit_profile(request: Request):
-    return templates.TemplateResponse("edit-profile.html", {"request": request})
-@router.get("/change-password")
-def change_password(request: Request):
-    return templates.TemplateResponse("change-password.html", {"request": request})
 
 
 @router.get(

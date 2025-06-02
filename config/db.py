@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MONGO_URI = os.getenv("MONGO_URI")
-DATABASE_NAME = os.getenv("DATABASE_NAME")
 
 client = MongoClient(MONGO_URI)
 db = client["myblog"]
@@ -21,7 +20,7 @@ def get_collection(collection_name: str):
 
 def find_one(collection_name: str, query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     """
-    Find a single document from a collection.
+    Find a single document from a collection that matches a query.
     """
     collection = get_collection(collection_name)
     return collection.find_one(query)
@@ -29,7 +28,7 @@ def find_one(collection_name: str, query: Dict[str, Any]) -> Optional[Dict[str, 
 
 def find_many(collection_name: str, query: Dict[str, Any] = {}) -> List[Dict[str, Any]]:
     """
-    Find multiple documents from a collection.
+    returns a list of documents from a MongoDB collection that match a query
     """
     collection = get_collection(collection_name)
     return list(collection.find(query))
@@ -38,7 +37,7 @@ def find_many(collection_name: str, query: Dict[str, Any] = {}) -> List[Dict[str
 def insert_one(collection_name: str, document: Dict[str, Any]) -> str:
     """
     Insert a single document into a collection.
-    Returns the inserted document ID.
+    Returns the inserted document ID as str.
     """
     collection = get_collection(collection_name)
     result = collection.insert_one(document)

@@ -1,4 +1,5 @@
 console.log("✅ main.js is successfully loaded!");
+// Organizes admin functions in a scoped object
 const App = {
   admin: {}
 };
@@ -45,16 +46,34 @@ const showUpdateUsernameBtn = document.getElementById("showUpdateUsernameBtn");
 const updateUsernameForm = document.getElementById("updateUsernameForm");
 const cancelUpdateBtn = document.getElementById("cancelUpdateBtn");
 
-
 // Output
 const postsList = document.getElementById("postsGrid");
+
+/**
+ *
+ * @param {string} containerId  – the ID of the <div> you just added
+ * @param {"success"|"error"}  – which CSS class to use
+ * @param {string} text         – the message body
+ */
+function showMessage(containerId, type, text) {
+  const container = document.getElementById(containerId);
+  if (!container) return console.warn("No container for", containerId);
+  //    e.g. if type="error", you get <p class="error-message">…</p>
+  container.innerHTML = `<p class="${type}-message">${text}</p>`;
+  // auto-dismiss
+  setTimeout(() => {
+    container.innerHTML = "";
+  }, 5000);
+}
 
 /************************************************
   Hide/Show Sections
 /************************************************/
+//This clears the screen before showing the next section.
 function hideAllSections() {
   console.log("hideAllSections() called");
-  document.querySelectorAll(".section-container, .auth-section").forEach((el) => {
+  // Loops through each of these sections and adds a hidden class to hide it via CSS.
+  document.querySelectorAll(".section-container, .auth-section").forEach((el) => { 
     console.log("Hiding section:", el.id);
     el.classList.add("hidden"); 
     el.style.display = "none";
@@ -62,18 +81,18 @@ function hideAllSections() {
   });
 }
 
-
+//Shows a specific section by its id after hiding all others
 function showSection(sectionId) {
   console.log(`showSection(${sectionId}) called`);
   hideAllSections();
 
-
-  const target = document.getElementById(sectionId);
+  const target = document.getElementById(sectionId); // selects the target section by ID
   if (target) {
     console.log(`Showing section: ${sectionId}`);
     target.classList.remove("hidden");
-    // ✅ Use "block" for admin sections, "flex" otherwise
-    if (["adminUsersSection", "analyticsSection"].includes(sectionId)) {
+
+    // Uses "block" for admin sections, "flex" otherwise
+    if (["adminUsersSection"].includes(sectionId)) {
       target.style.display = "block";
     } else {
       target.style.display = "flex";
@@ -84,69 +103,9 @@ function showSection(sectionId) {
 }
     
 
-// Clicks that Show/Hide Subsections in profile section
-function hideAllProfileSubsections() {
-  document.getElementById("yourPostsSection").classList.add("hidden");
-  document.getElementById("savedPostsSection").classList.add("hidden");
-}
-
-
-
-function toggleProfileSubsection(sectionId) {
-  const target = document.getElementById(sectionId);
-  if (!target) return;
-  // Check if target is currently hidden
-  const isHidden = target.classList.contains("hidden");
-
-  // Hide all other subsections first
-  hideAllProfileSubsections();
-
-  // If it was hidden, show it by removing hidden
-  if (isHidden) {
-    target.classList.remove("hidden");
-  }
-  // If it was already visible, do nothing (it remains hidden)
-  // effectively "closing" it on second click
-}
-
-
-
-
-function applyRoleBasedUI() {
-  if (!currentUserRole) return;
-  document.querySelectorAll("[data-role]").forEach(el => {
-    const roles = el.dataset.role.split(" ");
-    el.hidden = !roles.includes(currentUserRole);
-  });
-}
-
-
-/************************************************
-  Attach Edit/Delete Buttons to Posts
-************************************************/
-function attachPostButtonListeners() {
-  console.log("🛠️ Attaching event listeners for Edit and Delete buttons...");
-
-  document.querySelectorAll(".edit-btn").forEach((button) => { // for each edit button attach listner
-    button.addEventListener("click", (e) => {
-      const postId = e.target.dataset.id; //postId is taken from the button's data-id attribute.
-      const title = decodeURIComponent(e.target.dataset.title);
-      const content = decodeURIComponent(e.target.dataset.content);
-      editPost(postId, title, content); // calls the editPost function, passing details
-    });
-  });
-
-  document.querySelectorAll(".delete-btn").forEach((button) => {
-    button.addEventListener("click", (e) => {
-      const postId = e.target.dataset.id;
-      deletePost(postId);
-    });
-  });
-}
-
 //On page load(display sections)
 document.addEventListener("DOMContentLoaded", async () => {
-  hideAllSections();  // hides .section-container, .auth-section, etc.
+  hideAllSections();  
 
   // Check if user is logged in
   const isLoggedIn = await checkUserStatus(); 
@@ -160,6 +119,69 @@ document.addEventListener("DOMContentLoaded", async () => {
     // If NOT logged in, show the home page
     showSection("homeSection");
   }
+});
+
+
+// Selects all HTML elements that have the attribute data-role (delete btn etc..)
+function applyRoleBasedUI() {
+  if (!currentUserRole) return;
+  document.querySelectorAll("[data-role]").forEach(el => {
+    const roles = el.dataset.role.split(" ");
+    el.hidden = !roles.includes(currentUserRole); // If the current user's role is not included in the element’s allowed roles, it sets that ele hidden
+  });
+}
+
+
+/************************************************
+  Navigation Events
+************************************************/
+navHome.addEventListener("click", () => {
+  showSection("homeSection");
+});
+
+
+//user registration click
+navRegister.addEventListener("click", () => {
+  showSection("registerSection");
+});
+//login click
+navLogin.addEventListener("click", () => {
+  showSection("loginSection");
+});
+
+
+// Add a NAV CREATE POST event listner so user can click it in the navbar, (so clicking "Create Post" in the navbar shows the form).
+navCreatePost.addEventListener("click", () => {
+  console.log("🛠️ Create Post NAV button clicked!");
+  showSection("createPostSection");
+});
+
+//Blog posts click
+navPosts.addEventListener("click", () => {
+  console.log("🛠️ Blog Posts button clicked!");
+  showSection("postsSection");
+  fetchPosts();
+});
+
+navProfile.addEventListener("click", async() => { // await the new user, then reload
+  showSection("profileSection");
+  await checkUserStatus();
+  await fetchProfileInfo(); // ✅ Load profile data
+  fetchProfileForEdit();
+  loadUserPosts();
+  loadSavedPosts();
+});
+
+signUpLink.addEventListener("click", (e) => {
+  e.preventDefault(); // prevent navigating 
+  hideAllSections();
+  showSection("registerSection"); // or however you display Register
+});
+
+signInLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  hideAllSections();
+  showSection("loginSection");    // or however you display Login
 });
 
 /************************************************
@@ -199,7 +221,7 @@ async function checkUserStatus() {
     navCreatePost.classList.remove("hidden");
     navProfile.classList.remove("hidden");
     
-    // 🚀 Admin-only link
+    //  Admin-only link
     if (currentUserRole === "admin") {
       navManageUsers.classList.remove("hidden");
     } else {
@@ -225,65 +247,12 @@ async function checkUserStatus() {
   }
 }
 
-/************************************************
-  Navigation Events
-************************************************/
-navHome.addEventListener("click", () => {
-  showSection("homeSection");
-});
 
-
-//user registration click
-navRegister.addEventListener("click", () => {
-  showSection("registerSection");
-});
-//login click
-navLogin.addEventListener("click", () => {
-  showSection("loginSection");
-});
-
-// Creating post by user click
-// 🔹 Add a NAV CREATE POST event listner so user can click it in the navbar, (so clicking "Create Post" in the navbar shows the form).
-navCreatePost.addEventListener("click", () => {
-  console.log("🛠️ Create Post NAV button clicked!");
-  showSection("createPostSection");
-});
-
-//Blog posts click
-navPosts.addEventListener("click", () => {
-  console.log("🛠️ Blog Posts button clicked!");
-  showSection("postsSection");
-  fetchPosts();
-});
-
-navProfile.addEventListener("click", async() => { // await the new user, then reload
-  showSection("profileSection");
-  await checkUserStatus();
-  await fetchProfileInfo(); // ✅ Load profile data
-  fetchProfileForEdit();
-  loadUserPosts();
-  loadSavedPosts();
-});
-
-signUpLink.addEventListener("click", (e) => {
-  e.preventDefault(); // prevent navigating #
-  hideAllSections();
-  showSection("registerSection"); // or however you display Register
-});
-
-signInLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  hideAllSections();
-  showSection("loginSection");    // or however you display Login
-});
 /************************************************
   Logout click
 ************************************************/
 navLogout.addEventListener("click", async () => {
-  // 1. Confirm
-  const confirmed = confirm("Are you sure you want to logout?");
-  if (!confirmed) return;
-
+  
   try {
     // 2. Call logout endpoint
     const response = await fetch("/logout", {
@@ -293,11 +262,9 @@ navLogout.addEventListener("click", async () => {
 
     if (!response.ok) {
       const errData = await response.json();
-      alert(errData.detail || "Error logging out");
       return;
     }
 
-    alert("Logged out successfully!");
 
     // 3. Refresh your user‐status UI logic
     await checkUserStatus();
@@ -340,22 +307,21 @@ registerForm.addEventListener("submit", async (e) => {
   try {
     const response = await fetch("/register", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" }, //It sends the title and content as JSON
       credentials: "include",
       body: JSON.stringify({ username, email, password}),
     });
 
     const data = await response.json();
     console.log("Server response:", data);
-    if (response.ok) {
-      alert(data.message);
-      showSection("loginSection");
+    if (!response.ok) {
+      showMessage("registerMessage", "error", data.detail || data.message);
     } else {
-      alert(data.detail || "Registration error");
+      showMessage("registerMessage", "success", data.message);
+      registerForm.reset();      // optional: clear fields
     }
   } catch (error) {
-    alert("Error registering user");
-    alert("Error registering user: " + error.message);
+    showMessage("registerMessage", "error", "Network error – please try again");
   }
 });
 
@@ -363,26 +329,33 @@ registerForm.addEventListener("submit", async (e) => {
   Loginform User
 ************************************************/
 loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+  e.preventDefault();  // prevent default HTML form reload
+
   const username = document.getElementById("loginUsername").value;
   const password = document.getElementById("loginPassword").value;
 
-  //Create a FormData object
-  const formData = new FormData();
-  formData.append("username", username);
-  formData.append("password", password);
+  // 2) Build a URL-encoded body, FastAPI's OAuth2PasswordRequestForm expects data in this format.
+  const body = new URLSearchParams({
+    grant_type: "password",
+    username,
+    password,
+  });
 
-  try { //send the request
+  try {
+    // 3) POST as x-www-form-urlencoded
     const response = await fetch("/login", {
       method: "POST",
       credentials: "include",
-      body: formData,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded", //The body is URL-encoded  which matches what OAuth2PasswordRequestForm expects.
+      },
+      body: body.toString(),
     });
 
-    const data = await response.json();
+    const data = await response.json();  //converts server response to json
     console.log("Login response:", response.status, data);
     if (response.ok) {
-      alert(data.message);
+      showMessage("loginMessage", "success", data.message);
 
       // 1) Update UI for logged-in user
       await checkUserStatus();
@@ -391,15 +364,15 @@ loginForm.addEventListener("submit", async (e) => {
       // 2) Immediately hide all sections
       hideAllSections(); 
 
-      // 3) Show your default section after login (e.g., blog posts)
+      // 3) Show your default section after login ,
       showSection("postsSection"); 
       fetchPosts(); 
 
     } else {
-      alert(data.detail || "Login error");
+      showMessage("loginMessage", "error", data.detail || data.message);
     }
   } catch (error) {
-    alert("Error logging in");
+    showMessage("loginMessage", "error", "Network error – please try again");
   }
 });
 
@@ -415,7 +388,7 @@ createPostForm.addEventListener("submit", async (e) => {
   const category = document.getElementById("postCategory").value.trim();
 
   if (!title || !content) {
-    alert("⚠️ Title and content cannot be empty!");
+    showMessage("createPostMessage", "error", "⚠️ Title and content cannot be empty!");
     return;
   }
 
@@ -433,19 +406,46 @@ createPostForm.addEventListener("submit", async (e) => {
     console.log("🛠️ Create Post Response:", response.status, data);
 
     if (response.ok) {
-      alert("✅ Post created successfully!");
-      document.getElementById("postTitle").value = ""; //Clear the title and content input fields (reset the form).
+      showMessage("createPostMessage", "success", "✅ Post created successfully!");
+      document.getElementById("postTitle").value = ""; // reset the form
       document.getElementById("postContent").value = "";
 
-      // Refresh posts 
+      // Refresh posts section with added post
       fetchPosts();
     } else {
-      alert(data.detail || "❌ Error creating post");
+      showMessage("createPostMessage", "error", data.detail || "❌ Error creating post");
+
     }
   } catch (error) {
-    alert("❌ Error creating post: " + error.message);
+    showMessage("createPostMessage", "error", "❌ Error creating post: " + error.message);
   }
 });
+
+
+
+/************************************************
+  Attach Edit/Delete Buttons to Posts
+************************************************/
+function attachPostButtonListeners() {
+  console.log("🛠️ Attaching event listeners for Edit and Delete buttons...");
+
+  document.querySelectorAll(".edit-btn").forEach((button) => { // for each edit button attach listner
+    button.addEventListener("click", (e) => {
+      const postId = e.target.dataset.id; //postId is taken from the button's data-id attribute.
+      const title = decodeURIComponent(e.target.dataset.title);
+      const content = decodeURIComponent(e.target.dataset.content);
+      editPost(postId, title, content); // calls the editPost function, passing details
+    });
+  });
+
+  document.querySelectorAll(".delete-btn").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const postId = e.target.dataset.id;
+      deletePost(postId);
+    });
+  });
+}
+
 
 
 
@@ -461,7 +461,7 @@ async function fetchPosts() {
     if (words.length <= limit) {
       return { shortText: fullText, isTruncated: false };
     }
-    const truncated = words.slice(0, limit).join(" ") + "..."; //If the content is longer, it adds "..." and says it's truncated.
+    const truncated = words.slice(0, limit).join(" ") + "..."; //If the content is longer, it takes first 15 and join them into single str and adds "..." and says it's truncated.
     return { shortText: truncated, isTruncated: true };
   }
 
@@ -481,8 +481,7 @@ async function fetchPosts() {
     });
     if (!response.ok) {
       const errData = await response.json();
-      alert(errData.detail || "⚠️ Error fetching posts");
-      return;
+      return showMessage("postsMessage", "error", errData.detail || "Error fetching posts");
     }
     const posts = await response.json();
     console.log("📜 Fetched Posts:", posts);
@@ -494,15 +493,16 @@ async function fetchPosts() {
       return;
     }
     grid.innerHTML = "";
+    document.getElementById("postsMessage").innerHTML = ""; // clear any prior msg
 
     let hasVisiblePosts = false;
 
     posts.forEach((post) => {
-      // skip user's own posts
+      // skip user's own posts, if not admin
       if (post.user_id === currentUserId && currentUserRole === "user") {
         return;
       }
-      hasVisiblePosts = true;
+      hasVisiblePosts = true;     // helps decide if a message like "No posts found" should be shown or not
 
       // fallback for title/content, Handle missing data safely
       const postTitle = (post.title && post.title !== "undefined") ? post.title : "Untitled";
@@ -511,7 +511,9 @@ async function fetchPosts() {
       const postCategory = (post.category && post.category !== "undefined") ? post.category : "general";
 
       // truncate
-      const { shortText, isTruncated } = getTruncatedContent(postContent, 15);
+      const { shortText, isTruncated } = getTruncatedContent(postContent, 15);   //returns an object with two properties:
+
+      //condition to enable delete button
       const canDelete =
         currentUserRole === "admin" ||
         (currentUserRole === "user" && post.user_id === currentUserId);
@@ -525,9 +527,9 @@ async function fetchPosts() {
       const createdAt = new Date(post.created_at);
       const formattedDate = createdAt.toLocaleDateString(); 
 
-      // insert HTML
+      // insert HTML, Header: Username and Date
       card.innerHTML = `
-        <div class="card-header">
+        <div class="card-header">      
           <span class="username" data-user-id="${post.user_id}">@${username}</span>
           <span class="post-date"> ${formattedDate}</span>
         </div>
@@ -549,13 +551,15 @@ async function fetchPosts() {
         <!-- The bookmark icon in bottom-right corner -->
         <i 
           class="bi bi-bookmark bookmark-icon"
-          data-id="${post.id}"
+          data-id="${post._id}"
           data-title="${postTitle}"
           data-content="${postContent}"
           data-username="${username}"
           style="cursor: pointer;"
         ></i>
       `;
+        
+      //data-id holds the post's ID to identify which post to delete on click.
 
       // append to the grid
       grid.appendChild(card);
@@ -584,70 +588,74 @@ async function fetchPosts() {
     });
 
     // 🔹 After creating all cards, attach the .bookmark-icon listeners:(button for saving posts)
-document.querySelectorAll(".bookmark-icon").forEach(icon => {
-  icon.addEventListener("click", function() {
-    const postId = this.dataset.id;
-    const postTitle = this.dataset.title;
-    const postContent = this.dataset.content;
-    const userName = this.dataset.username;
+    document.querySelectorAll(".bookmark-icon").forEach(icon => {
+      icon.addEventListener("click", function() {
+        const postId = this.dataset.id;
+        const postTitle = this.dataset.title;
+        const postContent = this.dataset.content;
+        const userName = this.dataset.username;
 
-    const key = getSavedKey(); // ← use per-user key
-    let savedPosts = JSON.parse(localStorage.getItem(key)) || [];
+        const key = getSavedKey(); // ← use per-user key
+        let savedPosts = JSON.parse(localStorage.getItem(key)) || [];
 
-    // Check if already saved
-    const alreadySaved = savedPosts.some(sp => sp.id === postId);
-    if (alreadySaved) {
-      alert("This post is already saved!");
-      return;
-    }
+        // Check if already saved
+        const alreadySaved = savedPosts.some(sp => sp.id === postId);
+        if (alreadySaved) {
+          return showMessage("postsMessage", "error", "This Post is already saved!");
+          
+        }
 
-    // Push post data (including username) into localStorage
-    savedPosts.push({ 
-      id: postId, 
-      title: postTitle, 
-      content: postContent, 
-      username: userName
+        // Push post data (including username) into localStorage
+        savedPosts.push({ 
+          id: postId, 
+          title: postTitle, 
+          content: postContent, 
+          username: userName
+        });
+        localStorage.setItem(key, JSON.stringify(savedPosts));
+
+        showMessage("postsMessage", "success", "✅ Post saved successfully");
+
+        loadSavedPosts();
+      });
     });
-    localStorage.setItem(key, JSON.stringify(savedPosts));
-
-    alert("Post saved successfully!");
-
-    loadSavedPosts();
-  });
-});
 
     if (!hasVisiblePosts) {
       grid.innerHTML = '<p style="color: red; font-weight: bold;">No blog posts available.</p>';
     }
 
-    // 
+    // Search/filter logic
     const searchBar = document.getElementById("blogSearchBar");
     const searchBtn = document.getElementById("blogSearchBtn");
     if (searchBar) {
       searchBar.addEventListener("keyup", function () {
-      const query = this.value.toLowerCase();
+        const query = this.value.toLowerCase();
 
-    // For each .blog-card, check if title text includes query
-      document.querySelectorAll(".blog-card").forEach((card) => {
-        const titleEl = card.querySelector(".post-title");
-        const catEl = card.querySelector(".post-category");
+        // For each .blog-card, check if title text includes query
+        document.querySelectorAll(".blog-card").forEach((card) => {
+          const titleEl = card.querySelector(".post-title");
+          const catEl = card.querySelector(".post-category");
 
-        const titleText = titleEl ? titleEl.textContent.toLowerCase() : "";
-        const catText = catEl ? catEl.textContent.toLowerCase() : "";
+          const titleText = titleEl ? titleEl.textContent.toLowerCase() : "";
+          const catText = catEl ? catEl.textContent.toLowerCase() : "";
 
-      // If query is found in the title, show; otherwise hide
-        if (titleText.includes(query)||catText.includes(query)) {
-          card.style.display = "block";
-        } else {
-          card.style.display = "none";
-        }
+          // If query is found in the title, show; otherwise hide
+          if (titleText.includes(query)||catText.includes(query)) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
       });
-    });
-  }
+    }
 
   } catch (error) {
-    console.error("⚠️ Error fetching posts:", error);
-    alert("⚠️ Error fetching posts: " + error.message);
+    console.error("fetchPosts error:", error);
+    showMessage(
+      "postsMessage",
+        "error",
+        "❌ Unable to load posts: " + (error.message || error)
+      );
   }
 }
 
@@ -674,14 +682,23 @@ async function editPost(id, title, content) {
     });
 
     if (response.ok) {
-      alert("✅ Blog post updated successfully!");
+      showMessage("userPostsMessage","success", "✅ Post updated Succesfully!");  
       fetchPosts();
     } else {
       const errorData = await response.json();
-      alert(errorData.detail || "❌ Error updating post");
+      showMessage(
+        "userPostsMessage",
+        "error",
+        errorData.detail || "❌ Error updating post"
+      );
+      
     }
   } catch (error) {
-    alert("❌ Error updating post: " + error.message);
+    showMessage(
+      "userPostsMessage",
+      "error",
+      "❌ Network error — could not update profile: " + err.message
+    );
   }
 }
 
@@ -695,49 +712,33 @@ async function deletePost(id) {
     });
 
     if (response.ok) {
-      alert("✅ Blog post deleted successfully!");
+      showMessage(
+        "userPostsMessage",
+        "success",
+        "✅ Blog post deleted successfully!"
+      );
       fetchPosts();
     } else {
       const errorData = await response.json();
-      alert(errorData.detail || "❌ Error deleting post");
+      showMessage(
+        "userPostsMessage",
+        "error",
+        errorData.detail || "❌ Error deleting post"
+      );
     }
   } catch (error) {
-    alert("❌ Error deleting post: " + error.message);
+    showMessage(
+      "userPostsMessage",
+      "error",
+      "❌ Error deleting post: " + error.message
+    );
+    
   }
 }
 
 
 
-// Handle form submission
-if (changePasswordForm) {
-  changePasswordForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const oldPassword = document.getElementById("oldPassword").value;
-    const newPassword = document.getElementById("newPassword").value;
 
-    // Possibly call /edit_profile or /change_password route
-    const formData = new FormData();
-    formData.append("current_password", oldPassword);
-    formData.append("new_password", newPassword);
-
-    try {
-      const response = await fetch("/change_password", {
-        method: "PUT",
-        credentials: "include",
-        body: formData,
-      });
-      if (!response.ok) {
-        const errData = await response.json();
-        alert(errData.detail || "Error changing password");
-        return;
-      }
-      const data = await response.json();
-      alert(data.message || "Password updated successfully!");
-    } catch (err) {
-      alert("Error changing password: " + err.message);
-    }
-  });
-}
 
 
 function getSavedKey() {
@@ -878,8 +879,12 @@ async function loadUserPosts() {
     });
     if (!response.ok) {
       const errData = await response.json();
-      alert(errData.detail || "Error fetching profile for user posts");
-      return;
+      return showMessage(
+        "userPostsMessage",
+        "error",
+        errData.detail || "Error fetching profile for user posts"
+      );
+      
     }
 
     const data = await response.json();
@@ -984,7 +989,11 @@ async function loadUserPosts() {
     
   } catch (error) {
     console.error("Error loading user posts:", error);
-    alert("Error loading user posts: " + error.message);
+    showMessage(
+      "userPostsMessage",
+      "error",
+      "❌ Error loading your posts: " + (error.message || error)
+    );
   }
 }
 
@@ -1000,8 +1009,11 @@ async function fetchProfileInfo() {
 
     if (!response.ok) {
       const errData = await response.json();
-      alert(errData.detail || "Error fetching profile");
-      return;
+      return showMessage(
+        "profileMessage",
+        "error",
+        errData.detail || "Error fetching profile"
+      );
     }
 
     const data = await response.json();
@@ -1028,7 +1040,11 @@ async function fetchProfileInfo() {
     // e.g. loadUserPosts() that fetches or uses the same data.
 
   } catch (error) {
-    alert("Error fetching profile info: " + error.message);
+    showMessage(
+      "profileMessage",
+      "error",
+      "Error fetching profile info: " + error.message
+    );
   }
 }
 
@@ -1080,17 +1096,29 @@ if (uploadProfilePic) {
 
       if (!response.ok) {
         const errData = await response.json();
-        alert(errData.detail || "Error uploading photo");
-        return;
+        return showMessage(
+          "profileMessage",
+          "error",
+          data.detail || "Error uploading photo"
+        );
       }
 
       const data = await response.json();
       // Update the src of #profilePic
       profilePic.src = data.photo_url;
-      alert("Profile photo updated successfully!");
+      showMessage(
+        "profileMessage",
+        "success",
+        "✅ Profile photo updated successfully!"
+      );
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Error uploading photo: " + error.message);
+      console.error("Upload error:", err);
+      showMessage(
+        "profileMessage",
+        "error",
+        "Error uploading photo: " + err.message
+      );
     }
   });
 }
@@ -1112,17 +1140,29 @@ if (removePhoto) {
 
       if (!response.ok) {
         const errData = await response.json();
-        alert(errData.detail || "Error removing photo");
-        return;
+        return showMessage(
+          "profileMessage",
+          "error",
+          data.detail || "Error removing photo"
+        );
       }
 
       // On success, revert #profilePic to default icon
       profilePic.src = "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0iI2NjYyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjU2IDI1NmM3MC43IDAgMTI4LTU3LjMxIDEyOC0xMjhTMzI2LjcgMCAyNTYgMFMxMjggNTcuMzEgMTI4IDEyOFMxODUuMyAyNTYgMjU2IDI1NnogTTI1NiAyODhDMTU4LjggMjg4IDAgMzM4LjggMCA0NDh2NjRoNTEyVjQ0OEM1MTIgMzM4LjggMzUzLjIgMjg4IDI1NiAyODh6Ii8+PC9zdmc+";
 
-      alert("Profile photo removed!");
+      showMessage(
+        "profileMessage",
+        "success",
+        "✅ Profile photo removed successfully!"
+      );
 
     } catch (err) {
-      alert("Error removing photo: " + err.message);
+      console.error(err);
+      showMessage(
+        "profileMessage",
+        "error",
+        "Error removing photo: " + err.message
+      );
     }
   });
 }
@@ -1168,6 +1208,7 @@ if (removePhoto) {
     });
 });
 
+//EDIT PROFILE HANDLER
 // 1) Fetch current profile & pre-fill the form
 async function fetchProfileForEdit() {
   try {
@@ -1177,7 +1218,11 @@ async function fetchProfileForEdit() {
     });
     if (!res.ok) {
       const err = await res.json();
-      return alert(err.detail || "Error fetching profile");
+      return showMessage(
+        "editProfileMessage",
+        "error",
+        err.detail || "Error fetching profile details"
+      );
     }
     const data = await res.json();
     // Helper to apply faded style
@@ -1198,12 +1243,14 @@ async function fetchProfileForEdit() {
 
   } catch (err) {
     console.error("fetchProfileForEdit:", err);
-    alert("Error fetching profile: " + err.message);
+     showMessage(
+      "editProfileMessage",
+      "error",
+      "Error fetching profile: " + err.message
+    );
   }
 }
 
-// Run on page load (tabs are already in DOM)
-//window.addEventListener("DOMContentLoaded", fetchProfileForEdit);
 
 // 2) “Save Changes” button handler
 const saveProfileBtn = document.getElementById("saveProfileBtn");
@@ -1230,9 +1277,19 @@ if (saveProfileBtn) {
         body: fd
       });
       const result = await res.json();
-      if (!res.ok) throw new Error(result.detail || "Error editing profile");
+      if (!res.ok) {
+        return showMessage(
+          "editProfileMessage",
+          "error",
+          result.detail || "Error editing profile"
+        );
+      }
 
-      alert(result.message || "Profile updated successfully!");
+      showMessage(
+        "editProfileMessage",
+        "success",
+        result.message || "✅ Profile updated successfully!"
+      );
       // 2) Close the Edit Profile panel
       const editBtn   = document.querySelector('.tab-button[data-target="editProfilePanel"]');
       const editPanel = document.getElementById('editProfilePanel');
@@ -1246,13 +1303,18 @@ if (saveProfileBtn) {
 
     } catch (err) {
       console.error("Error editing profile:", err);
-      alert("Error editing profile: " + err.message);
+      showMessage(
+        "editProfileMessage",
+        "error",
+        "Error editing profile: " + err.message
+      );
     }
   });
 }
 
 
-// ─── Change Password submission ───
+
+// ─── Change Password submission Handler ───
 ;(function(){
   const savePasswordBtn   = document.getElementById("savePasswordBtn");
   const form = document.getElementById("changePasswordForm");
@@ -1267,10 +1329,14 @@ if (saveProfileBtn) {
 
     // 1) Basic validation
     if (!oldPwd || !newPwd || !confirmPwd) {
-      return alert("Please fill out all fields.");
+      return showMessage("changePasswordMessage", "error", "Please fill out all fields");
     }
     if (newPwd !== confirmPwd) {
-      return alert("New passwords do not match.");
+      return showMessage(
+        "changePasswordMessage",
+        "error",
+        "❌ New passwords do not match"
+      );
     }
 
     // 2) Build the payload
@@ -1289,7 +1355,11 @@ if (saveProfileBtn) {
       if (!res.ok) throw new Error(data.detail || "Error changing password");
 
       // 4) Success
-      alert(data.message || "Password updated successfully!");
+      showMessage(
+        "changePasswordMessage",
+        "success",
+        data.message || "✅ Password updated successfully!"
+      );
 
       // 5) Collapse the Change Password tab
       const btn   = document.querySelector('.tab-button[data-target="changePasswordPanel"]');
@@ -1300,7 +1370,11 @@ if (saveProfileBtn) {
       }
     } catch (err) {
       console.error("Change password failed:", err);
-      alert("Error changing password: " + err.message);
+      showMessage(
+        "changePasswordMessage",
+        "error",
+        "❌ Network error: " + err.message
+      );
     }
   });
 })();
@@ -1335,7 +1409,6 @@ App.admin.loadUsers = async () => {
     const res = await fetch('/admin/users', { credentials: 'include' });
     const users = await res.json();
     const tbody = document.querySelector('#adminUsersSection #adminUsersTable tbody');
-    console.log("Using tbody in section:", tbody.closest("section")?.id);
     tbody.innerHTML = '<tr><td colspan="5" style="color:red;">⚠️ JavaScript ran but table failed to populate</td></tr>';
     tbody.innerHTML = '';
     users.forEach(u => {
@@ -1356,7 +1429,8 @@ App.admin.loadUsers = async () => {
       tbody.appendChild(tr);
     });
   } catch (e) {
-    alert('Failed to load users: ' + e);
+    console.error(e);
+    showMessage("adminMessage", "error", "Failed to load users: " + e.message);
   }
 };
 
@@ -1377,8 +1451,10 @@ App.admin.openUserModal = async (userId) => {
     document.getElementById('modalPostCount').innerText  = u.total_posts;
     document.getElementById('userDetailModal').classList.remove('hidden');
   } catch (e) {
-    alert('Failed to load user details: ' + e);
+    console.error(e);
+    showMessage("adminMessage", "error", "Failed to load user details: " + e.message);
   }
+  
 };
 
 App.admin.closeUserModal = () => {
@@ -1411,11 +1487,16 @@ App.admin.handleUserActions = async (evt) => {
         });
         break;
     }
-    if (!res.ok) throw await res.text();
+    if (!res.ok){
+      const err = await res.text();
+      return showMessage("adminMessage", "error", "Action failed: " + err);
+    }
+    showMessage("adminMessage", "success", "Action succeeded");
     // reload the table after change
     App.admin.loadUsers();
   } catch (e) {
-    alert('Action failed: ' + e);
+    console.error(e);
+    showMessage("adminMessage", "error", "Action failed: " + e.message);
   }
 };
 

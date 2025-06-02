@@ -497,7 +497,7 @@ BLOG POST SECTION
 
 /* Make the Create Post heading bolder and larger (while staying white) */
 #createPostSection h3 {
-  color: #fff !important;         /* white text */
+  color: #ffcc00 !important;         /* white text */
   font-size: 1.8rem !important;   /* a bit larger than default */
   font-weight: 700 !important;    /* bold */
   margin-bottom: 1.2rem;          /* optional spacing */
@@ -1083,7 +1083,7 @@ button[data-action="delete-user"] {
 #profileSection .save-btn {
   align-self: flex-end;
   margin: 0.8rem auto;            /* ✅ centers horizontally */
-  background:  #d71c48;
+  background: rgb(11, 201, 65);
   color : #fff;
   font-size: 1rem;
   cursor: pointer;
@@ -1094,7 +1094,7 @@ button[data-action="delete-user"] {
 }
 
 #profileSection .save-btn:hover {
-  background: #d71c48;
+  background:  rgb(120, 123, 120);
 }
 
 /* —— Light-themed Edit Profile form —— */
@@ -1164,14 +1164,14 @@ button[data-action="delete-user"] {
   padding: 1.5rem;
   background: #f9f9f9 !important;
   border-radius: 8px;
-  margin: 0 auto; /* center the whole grid in its parent */
+  margin: 0 auto; 
 }
 
 /* —— Card constraints & positioning —— */
 #savedPostsGrid .blog-card {
-  position: relative;     /* for absolutely-positioned username */
-  width: 100%;            /* let the track size the card */
-  max-width: 320px;       /* don’t let any card get too wide */
+  position: relative;     
+  width: 100%;            
+  max-width: 320px;       
 }
 
 /* pin the username at top-right of each card */
@@ -1181,4 +1181,29 @@ button[data-action="delete-user"] {
   right: 0.75rem;
   font-size: 0.85rem;
   color: #666;
+}
+
+.error-message   { color: #c00; background: #fee; padding: .5em; border-radius: 4px; }
+.success-message { color: #060; background: #efe; padding: .5em; border-radius: 4px; }
+
+
+/* 1) Make sure the card has room at the bottom */
+.blog-card {
+  position: relative;       
+  padding-bottom: 3.5rem;  
+}
+
+/* 2) Force the delete button to sit above the padded area */
+.blog-card .delete-btn {
+  display: block;
+  width: 100%;
+  margin: 0;             
+}
+
+/* 3) Absolutely position the bookmark icon in that padded area */
+.blog-card .bookmark-icon {
+  position: absolute;
+  bottom: 0.75rem;        
+  right: 0.75rem;          
+  z-index: 2;               
 }

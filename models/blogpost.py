@@ -18,5 +18,5 @@ class BlogPostOut(BaseModel):
     created_at: datetime  
 
     class Config:
-        validate_by_name = True ## Lets you create models using the Python field name (id) instead of alias (_id)
+        validate_by_name = True # allows the model to accept both the alias _id and the Pythonic field name id as input
         json_encoders = {datetime: lambda dt: dt.isoformat()}

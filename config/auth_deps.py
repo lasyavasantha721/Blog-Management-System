@@ -69,7 +69,7 @@ def decode_token(token: str):
     if not token:
         return None
 
-    token = token.removeprefix("Bearer").strip()
+    token = token.removeprefix("Bearer").strip()  # this line removes the "Bearer" prefix so that only the raw JWT (access_token) can be decoded.
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get("sub")
@@ -84,5 +84,5 @@ def decode_token(token: str):
 
 def get_current_user_from_cookie(request: Request):
     """Retrieve the current user from the access token stored in cookies."""
-    token = request.cookies.get(COOKIE_NAME)
+    token = request.cookies.get(COOKIE_NAME)   #COOKIE_NAME is the key we use to store the JWT in a browser cookie.
     return decode_token(token)
