@@ -27,11 +27,20 @@ from config.db import find_one, insert_one
 from models.user import RegisterRequest
 
 router = APIRouter()
+
+# ──────────────────────────────────────────────────────
+# Configuration
+# ──────────────────────────────────────────────────────
+
+RESET_SECRET = os.getenv("RESET_SECRET", "another_secret_key")
+RESET_EXPIRE_MINUTES = int(os.getenv("RESET_TOKEN_EXPIRE_MINUTES", 30))
+SMTP_USER = os.getenv("EMAIL_USER")
+SMTP_PASS = os.getenv("EMAIL_PASSWORD")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 router.mount("/static", StaticFiles(directory="static"), name="static")
 # Initialize Jinja2 templates for rendering HTML
 templates = Jinja2Templates(directory="templates")
-
-Base_url = os.getenv("BASE_URL")
 
 @router.get("/request_password_reset")
 def request_password_reset(request: Request):
@@ -158,15 +167,6 @@ def logout():
     return response
 
 
-# ──────────────────────────────────────────────────────
-# Configuration
-# ──────────────────────────────────────────────────────
-
-RESET_SECRET = os.getenv("RESET_SECRET", "another_secret_key")
-RESET_EXPIRE_MINUTES = int(os.getenv("RESET_TOKEN_EXPIRE_MINUTES", 30))
-SMTP_USER = os.getenv("EMAIL_USER")
-SMTP_PASS = os.getenv("EMAIL_PASSWORD")
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ──────────────────────────────────────────────────────
 # Helpers
@@ -200,6 +200,7 @@ def send_reset_email(to_email: str, reset_link: str) -> None:
 @router.post("/request_password_reset", status_code=status.HTTP_200_OK)
 def request_password_reset(
     email: str = Form(...),
+    origin: str = Form(...),
 ):
     """
     Send a password‐reset link to the given email, if it exists.
@@ -216,7 +217,7 @@ def request_password_reset(
     # 3) Generate a reset token + link to your front‐end reset page
     token = create_reset_token(user_doc["_id"])
     
-    reset_link = f"{Base_url}/reset_password?token={token}"
+    reset_link = f"{origin}/reset_password?token={token}"
 
     try:
         send_reset_email(email, reset_link)

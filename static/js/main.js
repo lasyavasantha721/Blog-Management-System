@@ -3,13 +3,13 @@ console.log("✅ main.js is successfully loaded!");
 const App = {
   admin: {}
 };
-
 /************************************************
   DOM References
 ************************************************/
 // Global variable to store the logged-in user's ID
 let currentUserId = null;
 let currentUserRole = null;
+let blogPosts = [];
 
 // Nav items
 const navHome = document.getElementById("navHome");
@@ -139,18 +139,22 @@ navHome.addEventListener("click", () => {
   showSection("homeSection");
 });
 
-
+console.log("🔍 navRegister:", navRegister);
+console.log("🔍 navLogin:   ", navLogin);
 //user registration click
-navRegister.addEventListener("click", () => {
+console.log("➤ Attaching register listener");
+navRegister.addEventListener("click", (e) => {
+  console.log("🖱️ navRegister clicked – target:", e.target);
   showSection("registerSection");
 });
 //login click
-navLogin.addEventListener("click", () => {
+console.log("➤ Attaching login listener");
+navLogin.addEventListener("click", (e) => {
+  console.log("🖱️ navLogin clicked – target:", e.target);
   showSection("loginSection");
 });
 
-
-// Add a NAV CREATE POST event listner so user can click it in the navbar, (so clicking "Create Post" in the navbar shows the form).
+//create post click
 navCreatePost.addEventListener("click", () => {
   console.log("🛠️ Create Post NAV button clicked!");
   showSection("createPostSection");
@@ -474,7 +478,7 @@ async function fetchPosts() {
     const userData = await userResponse.json();
     const {id: currentUserId, role: currentUserRole } = userData; //If it succeeds, gets the logged-in user's id
 
-    // Fetch all blog posts
+    // Fetch all blog posts from server
     const response = await fetch("/blog_posts", {
       method: "GET",
       credentials: "include",
@@ -484,6 +488,8 @@ async function fetchPosts() {
       return showMessage("postsMessage", "error", errData.detail || "Error fetching posts");
     }
     const posts = await response.json();
+    blogPosts = posts;      //After loading /blog_posts, assigned posts to blogposts
+
     console.log("📜 Fetched Posts:", posts);
 
     // Clear existing grid
@@ -497,7 +503,7 @@ async function fetchPosts() {
 
     let hasVisiblePosts = false;
 
-    posts.forEach((post) => {
+    posts.forEach((post, i) => {
       // skip user's own posts, if not admin
       if (post.user_id === currentUserId && currentUserRole === "user") {
         return;
@@ -511,7 +517,7 @@ async function fetchPosts() {
       const postCategory = (post.category && post.category !== "undefined") ? post.category : "general";
 
       // truncate
-      const { shortText, isTruncated } = getTruncatedContent(postContent, 15);   //returns an object with two properties:
+      const { shortText, isTruncated } = getTruncatedContent(postContent, 15); 
 
       //condition to enable delete button
       const canDelete =
@@ -522,6 +528,7 @@ async function fetchPosts() {
       const card = document.createElement("div");
       card.classList.add("blog-card");
       card.style.position = "relative"; // Ensure the card is relative for absolute positioning
+
 
       // 1) Convert the ISO string to a JS Date, then format to just the date part:
       const createdAt = new Date(post.created_at);
@@ -539,7 +546,7 @@ async function fetchPosts() {
         <p class="post-content">${shortText}</p>
         ${
           isTruncated
-            ? `<a href="#" class="read-more">Read more</a>`
+            ? `<a href="#" class="read-more" data-post-index="${i}">Read more</a>` //Tagged each “Read more” link with an index
             : ""
         }
 
@@ -565,27 +572,8 @@ async function fetchPosts() {
       grid.appendChild(card);
 
       attachPostButtonListeners();
-
-      // read more logic
-      if (isTruncated) { //content is initialy not expanded if user clicks then it expands and shows 'show less' option
-        const readMoreLink = card.querySelector(".read-more");
-        let isExpanded = false;
-
-        readMoreLink.addEventListener("click", (e) => {
-          e.preventDefault();
-          isExpanded = !isExpanded;
-
-          const contentEl = card.querySelector(".post-content");
-          if (isExpanded) {
-            contentEl.textContent = postContent;
-            readMoreLink.textContent = "Show less";
-          } else {
-            contentEl.textContent = shortText;
-            readMoreLink.textContent = "Read more";
-          }
-        });
-      }
     });
+    
 
     // 🔹 After creating all cards, attach the .bookmark-icon listeners:(button for saving posts)
     document.querySelectorAll(".bookmark-icon").forEach(icon => {
@@ -620,6 +608,37 @@ async function fetchPosts() {
       });
     });
 
+    // ─── listens for click on “Read more”, → opens our Bootstrap modal ──────────────────────
+    document
+      .getElementById("postsGrid")
+      .addEventListener("click", (e) => {
+        if (!e.target.classList.contains("read-more")) return;
+        e.preventDefault();
+
+        //Retrieve the full post object
+        const idx = Number(e.target.dataset.postIndex);
+        const post = blogPosts[idx];
+        if (!post) return;
+
+        // fill in the modal
+        document.getElementById("postModalLabel").textContent = post.title;
+        document.getElementById("postModalBody").textContent = post.content;
+        document.getElementById("postModalMeta").textContent = [
+          `@${post.username}`,
+          new Date(post.created_at).toLocaleDateString(),
+          post.category ? `(${post.category})` : "",
+        ]
+          .filter(Boolean)
+          .join(" • ");
+
+        // show modal on screen
+        new bootstrap.Modal(      //bootstrap api that handles show/hide, backdrop, focus trapping, and animations for you.
+          document.getElementById("postModal")
+        ).show();
+      })
+
+  
+    // 7) If no posts were visible, show a “No blog posts available” message
     if (!hasVisiblePosts) {
       grid.innerHTML = '<p style="color: red; font-weight: bold;">No blog posts available.</p>';
     }
@@ -735,9 +754,6 @@ async function deletePost(id) {
     
   }
 }
-
-
-
 
 
 

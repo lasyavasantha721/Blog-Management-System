@@ -874,10 +874,11 @@ body {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.5);
-  display: flex; align-items: center; justify-content: center;
+  display: none; 
+  align-items: center; justify-content: center;
 }
 .modal.hidden {
-  display: none;
+  display: flex;
 }
 /* Modal content box */
 .modal-content {
@@ -973,6 +974,21 @@ button[data-action="delete-user"] {
   background-color: #f2f2f2;
   font-weight: bold;
 }
+
+/* Admin-modal overlay (independent of Bootstrap) */
+.admin-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;             /* visible by default */
+  align-items: center;
+  justify-content: center;
+}
+.admin-modal.hidden {
+  display: none;             /* hide when .hidden present */
+}
+
 
 
 /* ─────── Profile Tabs ─────── */
@@ -1207,3 +1223,4 @@ button[data-action="delete-user"] {
   right: 0.75rem;          
   z-index: 2;               
 }
+

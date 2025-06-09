@@ -1,0 +1,21 @@
+version: '3.11'
+
+services:
+  app:
+    image: lasyavasantha/blogapp
+    ports:
+      - "8000:8000"
+
+    environment:
+      - MONGO_URI=mongodb+srv://lasyavasantha721:Master%40733@cluster0.ljn8wrd.mongodb.net/myblog?retryWrites=true&w=majority
+      - MONGO_DB=myblog
+      - SECRET_KEY=mysecretkey
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - COOKIE_NAME=access_token
+      - RESET_SECRET=another_secret_key
+      - RESET_EXPIRE_MINUTES=30
+      - EMAIL_USER=myblogapp07@gmail.com
+      - EMAIL_PASSWORD=cqto wbfo kiev jwgz
+
+      
