@@ -302,6 +302,12 @@ navLogout.addEventListener("click", async () => {
 /************************************************
   Register form for user
 ************************************************/
+
+// Allow only alphabet characters in the username field
+document.getElementById("regUsername").addEventListener("input", function () {
+  this.value = this.value.replace(/[^a-zA-Z_-]/g, "");
+});
+
 registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const username = document.getElementById("regUsername").value;
@@ -550,20 +556,26 @@ async function fetchPosts() {
             : ""
         }
 
-        ${canDelete
-          ? `<button class="delete-btn" data-id="${post._id}">Delete</button>`
-          : ""
-        }
 
-        <!-- The bookmark icon in bottom-right corner -->
-        <i 
-          class="bi bi-bookmark bookmark-icon"
-          data-id="${post._id}"
-          data-title="${postTitle}"
-          data-content="${postContent}"
-          data-username="${username}"
-          style="cursor: pointer;"
-        ></i>
+
+        <!-- The delete and bookmark icons in bottom-right corner -->
+        <div style="display: flex; gap: 10px; justify-content: flex-end; align-items: center; margin-top: 10px;">
+          ${
+            canDelete
+              ? `<button class="btn btn-sm btn-danger delete-btn" 
+                          data-id="${post._id}">
+                    <i class="bi bi-trash"></i>
+                </button>`
+              : ""
+          }
+          <i class="bi bi-bookmark bookmark-icon"
+            data-id="${post._id}"
+            data-title="${postTitle}"
+            data-content="${postContent}"
+            data-username="${username}"
+            style="cursor: pointer;">
+          </i>
+        </div>
       `;
         
       //data-id holds the post's ID to identify which post to delete on click.
@@ -967,14 +979,15 @@ async function loadUserPosts() {
             data-id="${post.id}"
             data-title="${encodedTitle}"
             data-content="${encodedContent}"
+            
           >
-            Edit
+            <i class="bi bi-pencil-square"></i>
           </button>
           <button 
             class="btn btn-sm btn-danger delete-btn" 
             data-id="${post.id}"
           >
-            Delete
+            <i class="bi bi-trash"></i>
           </button>
         </div>
       `;
@@ -1164,7 +1177,7 @@ if (removePhoto) {
       }
 
       // On success, revert #profilePic to default icon
-      profilePic.src = "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0iI2NjYyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjU2IDI1NmM3MC43IDAgMTI4LTU3LjMxIDEyOC0xMjhTMzI2LjcgMCAyNTYgMFMxMjggNTcuMzEgMTI4IDEyOFMxODUuMyAyNTYgMjU2IDI1NnogTTI1NiAyODhDMTU4LjggMjg4IDAgMzM4LjggMCA0NDh2NjRoNTEyVjQ0OEM1MTIgMzM4LjggMzUzLjIgMjg4IDI1NiAyODh6Ii8+PC9zdmc+";
+      profilePic.src =  "/static/images/default profile picture.png";
 
       showMessage(
         "profileMessage",
@@ -1269,6 +1282,14 @@ async function fetchProfileForEdit() {
 
 
 // 2) “Save Changes” button handler
+
+document.getElementById("newName").addEventListener("input", function () {
+  this.value = this.value.replace(/[^a-zA-Z]/g, "");
+});
+document.getElementById("newUsername").addEventListener("input", function () {
+  this.value = this.value.replace(/[^a-zA-Z.-_]/g, "");
+});
+
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 if (saveProfileBtn) {
   saveProfileBtn.addEventListener("click", async () => {
@@ -1292,7 +1313,9 @@ if (saveProfileBtn) {
         credentials: "include",
         body: fd
       });
+
       const result = await res.json();
+
       if (!res.ok) {
         return showMessage(
           "editProfileMessage",
@@ -1400,7 +1423,6 @@ if (saveProfileBtn) {
 
 
 // NAV ITEMS FOR ADMIN SECTIONS
-//console.log("⏳ Adding click listener to navManageUsers");
 //const navManageUsers = document.getElementById("navManageUsers");
 console.log("navManageUsers element is:", navManageUsers);
 if (navManageUsers) {

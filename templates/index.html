@@ -107,6 +107,7 @@
           <input 
             id="regUsername" 
             type="text" 
+            pattern="^[A-Za-z._-]+$" title="Only letters, ( . ), ( - ), ( _ ) are allowed"
             placeholder="Enter your Username" 
             required 
           />
@@ -133,7 +134,7 @@
         </form>
     
         <p class="auth-footer">
-          Already have an account? <a id="signInLink" href="#">Sign in now</a>
+          Already have an account? <a id="signInLink" href="#">Sign in</a>
         </p>
       </div>
     </div>
@@ -241,6 +242,7 @@
       <div class="mb-3">
         <label for="postCategory" class="form-label">Category</label>
         <select 
+          class="Dropdown"
           id="postCategory" 
           class="form-control" 
           required
@@ -269,7 +271,7 @@
         <img 
           id="profilePic"
           class="profile-pic" 
-          src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0iI2NjYyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjU2IDI1NmM3MC43IDAgMTI4LTU3LjMxIDEyOC0xMjhTMzI2LjcgMCAyNTYgMFMxMjggNTcuMzEgMTI4IDEyOFMxODUuMyAyNTYgMjU2IDI1NnogTTI1NiAyODhDMTU4LjggMjg4IDAgMzM4LjggMCA0NDh2NjRoNTEyVjQ0OEM1MTIgMzM4LjggMzUzLjIgMjg4IDI1NiAyODh6Ii8+PC9zdmc+" 
+          src="/static/user_photos/default-profile.png";
           alt="Profile Picture"
         />
         <div id="cameraIcon" class="camera-icon">
@@ -337,12 +339,14 @@
             type="text" 
             id="newUsername" 
             placeholder="Enter new username"
+            pattern="^[A-Za-z]+$" title="Only alphabets, ( . ), ( - ), ( _ ) are allowed"
             required
           />
           <label for="newName">Name</label>
           <input 
             type="text" 
             id="newName" 
+            pattern="^[A-Za-z]+$" title="Only alphabets are allowed"
             placeholder="Enter your display name (optional)"
           />
           
@@ -503,6 +507,7 @@
 <!-- Bootstrap JS (CDN) -->
 <script 
   src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  
 ></script>
   
 <!-- Main JavaScript -->

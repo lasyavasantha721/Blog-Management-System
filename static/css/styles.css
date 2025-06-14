@@ -151,7 +151,10 @@ body {
   z-index: 0; 
 }
 
-
+.Dropdown{
+  background-color: white;
+  color:#000
+}
 /* Shared Section Content Container */
 .section-content {
   position: relative;
@@ -184,13 +187,13 @@ body {
 
 /* Form Inputs */
 .form-control {  /*for input boxes in forms*/
-  background: rgba(255, 255, 255, 0.3);
+  background: #dee2e6;
   border: 1px solid rgba(255, 255, 255, 0.6);
-  color: white;
+  color: #212529;
 }
 
 .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.8); /* for text input*/
+  color: rgba(24, 5, 5, 0.8); /* for text input*/
 }
 
 
@@ -497,7 +500,7 @@ BLOG POST SECTION
 
 /* Make the Create Post heading bolder and larger (while staying white) */
 #createPostSection h3 {
-  color: #ffcc00 !important;         /* white text */
+  color: #9bb3eb !important;         /* white text */
   font-size: 1.8rem !important;   /* a bit larger than default */
   font-weight: 700 !important;    /* bold */
   margin-bottom: 1.2rem;          /* optional spacing */
@@ -534,7 +537,7 @@ BLOG POST SECTION
 
 /* Change the .btn-success color from Bootstrap green to a custom color */
 .btn-success {
-  background-color: #ffcc00 !important; 
+  background-color: #a9dabe !important; 
   /* match the border color */
   color: #080000 !important;               /* black text */
 }
@@ -563,8 +566,8 @@ body {
   position: relative;
   z-index: 1;
   margin-top: 4.5rem; 
-  background: rgba(0, 0, 0, 0.3) !important; /* translucent dark/gray box */
-  color: #fff !important;                   /* white text for contrast */
+  background: #fff !important; /* translucent dark/gray box */
+  color: #343a40 !important;                   /* white text for contrast */
   border-radius: 10px;
   padding: 40px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -599,7 +602,7 @@ body {
 
 .post-category-small {
   font-size: 0.8rem;       /* smaller than normal text */
-  color: #d66823 !important;  /* a subtle gray color so it’s not too bright */
+  color: #9d6c52 !important;  /* a subtle gray color so it’s not too bright */
   margin-left: 0.5rem;     /* small spacing from the title */
   background: none;        /* no background so it blends with white card */
 }
@@ -612,7 +615,7 @@ body {
 /* Title styling for both main blog posts and saved posts */
 .post-title {
   font-size: 1.2rem !important; 
-  color: #ffcc00 !important;   
+  color: #174cc7  !important;   
   text-decoration: underline !important; 
   margin-bottom: 0.5rem;          /* small space below title */
 }
@@ -923,16 +926,6 @@ button[data-action="delete-user"] {
 }
 
 
-/* Delete button on blog cards */
-.blog-card button.delete-btn {
-  background: #dc3545;
-  color: #fff;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
 
 /* Manage Users Section */
 #adminUsersSection {
@@ -994,7 +987,7 @@ button[data-action="delete-user"] {
 /* ─────── Profile Tabs ─────── */
 #profileSection .profile-tabs {
   display: flex;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #cccccc;
   margin: 1.5rem 0 1rem;
   padding: 0;
 }
@@ -1099,7 +1092,7 @@ button[data-action="delete-user"] {
 #profileSection .save-btn {
   align-self: flex-end;
   margin: 0.8rem auto;            /* ✅ centers horizontally */
-  background: rgb(11, 201, 65);
+  background: rgb(10, 168, 54);
   color : #fff;
   font-size: 1rem;
   cursor: pointer;
@@ -1110,7 +1103,7 @@ button[data-action="delete-user"] {
 }
 
 #profileSection .save-btn:hover {
-  background:  rgb(120, 123, 120);
+  background:  rgb(34, 148, 36);
 }
 
 /* —— Light-themed Edit Profile form —— */
@@ -1202,7 +1195,6 @@ button[data-action="delete-user"] {
 .error-message   { color: #c00; background: #fee; padding: .5em; border-radius: 4px; }
 .success-message { color: #060; background: #efe; padding: .5em; border-radius: 4px; }
 
-
 /* 1) Make sure the card has room at the bottom */
 .blog-card {
   position: relative;       
@@ -1212,7 +1204,7 @@ button[data-action="delete-user"] {
 /* 2) Force the delete button to sit above the padded area */
 .blog-card .delete-btn {
   display: block;
-  width: 100%;
+  width: 10%;
   margin: 0;             
 }
 
@@ -1223,4 +1215,5 @@ button[data-action="delete-user"] {
   right: 0.75rem;          
   z-index: 2;               
 }
+
 

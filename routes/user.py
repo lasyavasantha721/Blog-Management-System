@@ -21,7 +21,7 @@ from config.auth_deps import (
     hash_password,
     verify_password,
     COOKIE_NAME,
-    ACCESS_TOKEN_EXPIRE_MINUTES,
+    
 )
 from config.db import find_one, insert_one
 from models.user import RegisterRequest

@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, constr
+from fastapi import Form
 from typing import Literal
 from typing import Optional
 # Data model
@@ -7,6 +8,11 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
     role: str = "user"  # Default role is 'user'
+
+class EditProfileForm(BaseModel):
+    new_name:     Optional[str]    = Field(None)
+    new_username: Optional[str]    = Field(None)
+    new_email:    Optional[EmailStr]= None
 
 class UserOut(BaseModel):
     id: str
