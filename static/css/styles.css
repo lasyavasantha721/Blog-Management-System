@@ -1,43 +1,195 @@
-/* General Styling */
-body {
-  font-family: 'Poppins', sans-serif;
+
+/* ===================================================
+   MODERN BLOG UI - ADVANCED DESIGN SYSTEM
+   Light Theme with Glassmorphism & Material Design
+=================================================== */
+
+/* CSS Variables for Design System */
+:root {
+  /* Primary Color Palette */
+  --primary-50: #f0f4ff;
+  --primary-100: #e0e9ff;
+  --primary-200: #c7d7fe;
+  --primary-300: #a5bbfc;
+  --primary-400: #8292f8;
+  --primary-500: #6366f1;
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+  --primary-800: #3730a3;
+  --primary-900: #312e81;
+
+  /* Secondary Color Palette */
+  --secondary-50: #fdf4ff;
+  --secondary-100: #fae8ff;
+  --secondary-200: #f5d0fe;
+  --secondary-300: #f0abfc;
+  --secondary-400: #e879f9;
+  --secondary-500: #d946ef;
+  --secondary-600: #c026d3;
+  --secondary-700: #a21caf;
+  --secondary-800: #86198f;
+  --secondary-900: #701a75;
+
+  /* Accent Colors */
+  --accent-blue: #3b82f6;
+  --accent-teal: #14b8a6;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+
+  /* Neutral Palette */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Surface Colors */
+  --surface-primary: #ffffff;
+  --surface-secondary: rgba(255, 255, 255, 0.8);
+  --surface-glass: rgba(255, 255, 255, 0.25);
+  --surface-elevated: rgba(255, 255, 255, 0.9);
+
+  /* Typography */
+  --font-primary: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Cal Sans', 'Inter', sans-serif;
+
+  /* Spacing Scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.2rem;
+  --space-xl: 2rem;
+  --space-2xl: 2rem;
+  --space-3xl: 4rem;
+
+  /* Border Radius Scale */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.15);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global Styles */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background: linear-gradient(135deg, 
+    var(--primary-50) 0%, 
+    var(--secondary-50) 50%, 
+    var(--primary-100) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
   overflow-x: hidden;
-  background-color: #f4f4f4; /* Light gray for better contrast */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Navbar Styling */
+/* Utility Classes */
+.glass-surface {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.elevated-surface {
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+.floating-element {
+  transform: translateY(0);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.floating-element:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ===================================================
+   NAVIGATION BAR
+=================================================== */
 .navbar {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-/* Normal state: bolder text, bright color */
-.navbar .nav-link {
-  color: #fff !important;       /* ensure bright white text */
-  font-weight: 600 !important;  /* a bit bolder than normal */
-  transition: color 0.3s ease;  /* smooth transition on hover */
+  background: var(--surface-glass) !important;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  z-index: 1000;
 }
 
-/* Hover state: use a subtle highlight color */
-.navbar .nav-link:hover {
-  color: #ffcc00 !important;    /* gold highlight on hover */
-  text-decoration: none;        /* remove underline if any */
+.navbar-brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
+
+.navbar .nav-link {
+  color: var(--gray-700) !important;
+  font-weight: 500;
+  padding: var(--space-sm) var(--space-md) !important;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  position: relative;
+  margin: 0 var(--space-xs);
+}
+
+.navbar .nav-link:hover {
+  color: var(--primary-600) !important;
+  background: var(--primary-50);
+  transform: translateY(-1px);
+}
+
+.navbar .nav-link.text-danger:hover {
+  color: var(--accent-rose) !important;
+  background: rgba(244, 63, 94, 0.1);
+}
+
+/* ===================================================
+   HOME SECTION
+=================================================== */
 .home-container.section-container {
   width: 100%;
-  height: 100vh;
-  /* Unique home background */
-  background: url("/static/images/home-bg.jpg") no-repeat center center/cover;
-  display: flex;              /* We rely on .hidden to hide it initially */
+  min-height: 100vh;
+  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
-  padding: 20px;
   position: relative;
+  padding: var(--space-2xl);
 }
 
-/* Dark overlay for better text visibility on home page */
 .home-container.section-container::before {
   content: "";
   position: absolute;
@@ -45,407 +197,1010 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Dark overlay */
+  background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 70%),
+              radial-gradient(circle at 80% 80%, rgba(217, 70, 239, 0.1) 0%, transparent 70%),
+              radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-/* Home Content Styling */
 .home-content {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 40px;
-  border-radius: 10px;
-  animation: fadeIn 1.2s ease-in-out;
-  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.1);
+  background: #f8f9fa;
+  backdrop-filter: blur(20px);
+  padding: var(--space-3xl);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-xl);
+  max-width: 800px;
+  width: 100%;
+  animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Welcoming Heading */
 .home-content h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #ffcc00; /* Classy Gold Color */
-  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-md);
+  line-height: 1.2;
 }
 
-/* Subtext Styling */
-.home-content p {
-  font-size: 1.4rem;
-  font-weight: 300;
-  color: #f8f8f8;
-  margin-top: 15px;
-}
-
-/* About Section */
-.about-container {
-  margin-top: 30px;
-  padding: 25px;
-  text-align: center;
-  border-radius: 10px;
-  border-bottom: 3px solid #ffcc00; /* Subtle gold underline */
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(5px);
-}
-
-/* About Us Heading */
-.about-container h3 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
-  display: inline-block;
-}
-
-/* About Us Text */
-.about-container p {
-  font-size: 1.2rem;
+.home-content p.lead {
+  font-size: 1.25rem;
+  color: var(--gray-600);
+  margin-bottom: var(--space-xl);
   font-weight: 400;
-  color: white;
-  opacity: 0.9;
-  line-height: 1.6;
 }
 
-/* --------------------------------------------
-   HIDE/SHOW LOGIC
--------------------------------------------- */
-/* -----------------------------------------------------
-   1) HIDE/SHOW LOGIC & SECTION CONTAINERS
------------------------------------------------------- */
+.about-container {
+  margin-top: var(--space-xl);
+  padding: var(--space-xl);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-/* Hide Sections by Default */
+.about-container h3 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: var(--space-md);
+}
+
+.about-container p {
+  color: var(--gray-600);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+/* ===================================================
+   SECTION CONTAINERS
+=================================================== */
 .hidden {
   display: none !important;
 }
 
-/* Section Container */
 .section-container {
-  display: none; /* hidden by default */
+  display: none;
   width: 100%;
-  padding: 40px;
-  color: white;
-  text-align: center;
+  padding: var(--space-2xl);
   position: relative;
+  min-height: calc(100vh - 80px);
+  margin-top: 80px;
 }
 
 .section-container.active {
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
-/* Optional overlay for other sections */
+.section-content {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.125);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-.section-container::before {
+/* ===================================================
+   AUTHENTICATION SECTIONS
+=================================================== */
+.auth-section {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: var(--space-xl);
+}
+
+.auth-card {
+  background: var(--surface-elevated);
+  width: 100%;
+  margin-top: 50px;
+  max-width: 420px;
+  padding: var(--space-2xl);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-card::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
-  pointer-events: none; /* let clicks pass through overlay */
-  z-index: 0; 
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
 }
 
-.Dropdown{
-  background-color: white;
-  color:#000
-}
-/* Shared Section Content Container */
-.section-content {
-  position: relative;
-  z-index: 1;
-  pointer-events: auto; /* allows form inputs to be clickable */
-
-  padding: 40px;
-  border-radius: 10px;
-  
-  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.3);
-  width: 70%;
-  animation: fadeIn 1.2s ease-in-out;
+.auth-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: var(--space-xl);
+  text-align: center;
 }
 
-
-/* Override h3 specifically in the profile section */
-#profileSection .section-content h3 {
-  font-size: 1.8rem !important;     /* larger font size */
-  font-weight: 700 !important;      /* bold text */
-  text-decoration: underline !important;  /* underline the heading */ 
-  color: #ffcc00 !important;       
+.auth-card p {
+  margin-top: -18px;
+}
+ 
+.auth-form label {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
 }
 
-/* Profile Info - Gold for "Your Posts" */
-#profileInfo h5 {
-  color: #ffcc00;
-  font-weight: bold;
-  font-size: 1.2rem; 
+.auth-form input {
+  width: 100%;
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  background: var(--surface-primary);
+  color: var(--gray-800);
 }
 
-/* Form Inputs */
-.form-control {  /*for input boxes in forms*/
-  background: #dee2e6;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  color: #212529;
-}
-
-.form-control::placeholder {
-  color: rgba(24, 5, 5, 0.8); /* for text input*/
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
 }
 
 
-.form-control:focus {
-  background: rgba(50, 47, 47, 0.5);
-  color: #fff;
-  border-color: #ffcc00;
-
-  /* Remove the default blue focus shadow */
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-
-/* Buttons */
-.btn {
-  transition: all 0.3s ease-in-out;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-}
-
-
-/* -----------------------------------------------------
-BLOG POST SECTION
-------------------------------------------------------*/
- /* A heading style for the blog section */
-.blog-section-title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #333;
-  text-align: left;
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  padding: var(--space-md);
+  font-size: 1rem;
   font-weight: 600;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-md);
 }
 
-/* The grid container for blog cards */
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.auth-footer {
+  margin-top: var(--space-lg);
+  text-align: center;
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.auth-footer a {
+  color: var(--primary-600);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.auth-footer a:hover {
+  color: var(--primary-700);
+  text-decoration: underline;
+}
+
+/* ===================================================
+   BLOG POSTS SECTION
+=================================================== */
+.blog-section-title {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--gray-800);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+  position: relative;
+}
+
+.blog-section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+  border-radius: 2px;
+}
+
+.search-bar-wrapper {
+  position: relative;
+  margin-bottom: var(--space-xl);
+}
+
+.search-bar-wrapper input {
+  width: 100%;
+  padding: var(--space-md) var(--space-md) var(--space-md) 3rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  background: var(--surface-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-bar-wrapper input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.search-bar-wrapper .bi-search {
+  position: absolute;
+  left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  font-size: 1.1rem;
+}
+
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem; /* spacing between cards */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-xl);
   width: 100%;
 }
 
-/* Card styling (similar to .post-card) */
 .blog-card {
-  
-  background: #fff !important;
-  color: #000 !important;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* softer shadow */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.3s;
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Hover effect */
+.blog-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-normal);
+}
+
 .blog-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-200);
 }
 
-
+.blog-card:hover::before {
+  transform: scaleX(1);
+}
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;    /* a little breathing room */
+  margin-bottom: var(--space-md);
+  position: relative;
 }
 
 .username {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-weight: bold;
-  font-size: 0.85rem;
-  color: #777;
-  margin-bottom: 0.3rem;
-  /* whatever existing styles you have */
+  font-size: 0.875rem;
+  color: var(--primary-600);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--primary-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--primary-200);
 }
 
 .post-date {
-  position: absolute;
-  right: 1rem;
-  top: 10%;
-  transform: translateY(-50%);
-  font-size: 0.85rem;
-  color: #555;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  font-weight: 500;
 }
 
-/* Title of the post */
-.blog-card .post-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  margin-top: 1rem;
-  color: #333;
-}
-
-/* The truncated content */
-.blog-card .post-content {
-  flex: 1; /* let it grow */
-  font-size: 0.95rem;
+.post-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: var(--space-md);
   line-height: 1.4;
-  margin-bottom: 1rem;
-}
-
-/* "Read more" link */
-.blog-card .read-more {
-  font-size: 0.9rem;
-  color: #1565c0;
-  text-decoration: none;
-  margin-top: auto;
-}
-
-.blog-card .read-more:hover {
-  text-decoration: underline;
-}
-
-/* -----------------------------------------------------
-   4) AUTH SECTIONS (Login/Register)
------------------------------------------------------- */
-
-/* The container that fills the whole screen and centers the card */
-.auth-section {
-  width: 100%;
-  height: 100vh;      
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
+  gap: var(--space-sm);
 }
 
-/* The white card for login/register */
-.auth-card {
-  background: #fff;           
-  width: 360px;              
-  padding: 2rem 2.5rem;      
-  border-radius: 10px;        
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
-  text-align: left;
+.post-category-small {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  border: 1px solid var(--gray-200);
 }
 
-/* Form Title */
-.auth-card h2 {
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #000; 
-}
-
-/* Form Container */
-.auth-form label {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-size: 0.9rem;
-  color: #333; 
-}
-
-.auth-form input {
-  width: 100%;
-  padding: 0.6rem 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 0.95rem;
-  box-sizing: border-box;
-}
-
-/* Optional password field container */
-.password-field {
-  position: relative;
-}
-
-/* Submit Button */
-.btn-submit {
-  width: 100%;
-  background-color: #1565c0; /* Example blue color */
-  color: #fff;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-submit:hover {
-  background-color: #0d47a1; 
-}
-
-/* Footer Text under the form */
-.auth-footer {
-  margin-top: 1.2rem;
-  font-size: 0.88rem;
-  text-align: center;
-  color: #555;
-}
-
-.auth-footer a {
-  color: #1565c0;
-  text-decoration: none;
-}
-.auth-footer a:hover {
-  text-decoration: underline;
-}
-
-/* -----------------------------------------------------
-   5) FINAL OVERRIDES (READABILITY)
------------------------------------------------------- */
-
-/* Force list-group items to also have white BG & black text */
-.list-group-item {
-  background-color: #fff !important; 
-  color: #000 !important;
-  padding: 1rem;
-}
-
-.no-posts-message {
-    color: black;
-    font-size: 16px; /* optional: control size */
-    text-align: center; /* optional: center it */
-    margin-top: 10px; /* optional: give some space */
-  }
-  
-
-/* If you have text elements .post-text or .post-content, ensure black text */
-.post-text,
 .post-content {
-  color: #000 !important;
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+  font-size: 0.95rem;
 }
 
-/* Make .btn have black text if needed */
-.btn {
-  color: #000 !important;
-}
-
-/* "Read More" link in blue */
 .read-more {
-  color: #1565c0 !important; 
+  color: var(--primary-600);
   text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
 }
 
 .read-more:hover {
+  color: var(--primary-700);
   text-decoration: underline;
 }
 
-/* Fade-in Animation */
-@keyframes fadeIn {
+.bookmark-icon {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  font-size: 1.25rem;
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+}
+
+.bookmark-icon:hover {
+  color: var(--primary-600);
+  background: var(--primary-50);
+  transform: scale(1.1);
+}
+
+/* ===================================================
+   FORM ELEMENTS
+=================================================== */
+.form-control {
+  width: 100%;
+  padding: var(--space-md);
+  border: 2px solid #adb5bd;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  background: var(--surface-primary);
+  color: var(--gray-800);
+  margin-bottom: var(--space-md);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-control::placeholder {
+  color: var(--gray-400);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+/* ===================================================
+   BUTTONS
+=================================================== */
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--accent-emerald), #059669);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--accent-rose), #e11d48);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #e11d48, #be185d);
+}
+
+.btn-secondary {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+}
+
+.btn-secondary:hover {
+  background: var(--gray-200);
+  transform: translateY(-1px);
+}
+
+.btn-sm {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.8rem;
+}
+
+/* ===================================================
+   PROFILE SECTION
+=================================================== */
+#profileSection .section-content {
+  background: var(--surface-elevated);
+  color: var(--gray-800);
+}
+
+.profile-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-xl);
+}
+
+#profileHeader {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.profile-pic-wrapper {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto var(--space-lg);
+}
+
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary-100);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-normal);
+}
+
+.profile-pic:hover {
+  transform: scale(1.05);
+  border-color: var(--primary-300);
+}
+
+.camera-icon {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-500);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+  border: 3px solid white;
+}
+
+.camera-icon:hover {
+  background: var(--primary-600);
+  transform: scale(1.1);
+}
+
+.camera-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--surface-primary);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  min-width: 180px;
+  z-index: 100;
+  display: none;
+}
+
+.camera-menu.show {
+  display: block;
+  animation: fadeInScale 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.camera-menu-item {
+  padding: var(--space-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.camera-menu-item:hover {
+  background: var(--gray-50);
+}
+
+#profileName {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: var(--space-sm);
+}
+
+.profile-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  border-radius: var(--radius-xl);
+  background: var(--gray-100);
+  padding: var(--space-xs);
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.profile-tabs .tab-button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: var(--space-md) var(--space-lg);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--gray-600);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  white-space: nowrap;
+}
+
+.profile-tabs .tab-button:hover {
+  color: var(--primary-600);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.profile-tabs .tab-button.active {
+  background: var(--primary-500);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.tab-panel {
+  width: 100%;
+  border-radius: var(--radius-xl);
+  background: var(--surface-primary);
+  padding: var(--space-xl);
+  border: 1px solid var(--gray-200);
+}
+
+.tab-panel.hidden {
+  display: none;
+}
+
+/* ===================================================
+   EDIT PROFILE FORM
+=================================================== */
+.edit-profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.edit-profile-form input.fetched-value {
+  color: var(--gray-500);
+  font-style: italic;
+}
+
+.save-btn {
+  align-self: center;
+  background: linear-gradient(135deg, var(--accent-emerald), #059669);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: var(--space-md) var(--space-xl);
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-md);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+/* ===================================================
+   USER POSTS LIST
+=================================================== */
+.list-group-item {
+  background: var(--surface-primary);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+  padding: var(--space-lg);
+  transition: all var(--transition-normal);
+}
+
+.list-group-item:hover {
+  border-color: var(--primary-200);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.no-posts-message {
+  text-align: center;
+  color: var(--gray-500);
+  font-style: italic;
+  padding: var(--space-xl);
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--gray-200);
+}
+
+/* ===================================================
+   ADMIN SECTION
+=================================================== */
+#adminUsersSection {
+  background: var(--surface-primary);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-2xl);
+  margin-top: 100px;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--gray-200);
+}
+
+#adminUsersSection h2 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+#userSearchInput {
+  width: 100%;
+  padding: var(--space-md);
+  border: 2px solid #adb5bd;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  margin-bottom: var(--space-xl);
+  transition: all var(--transition-fast);
+}
+
+#userSearchInput:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.table th,
+.table td {
+  padding: var(--space-md) var(--space-lg);
+  text-align: left;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.table th {
+  background: var(--gray-50);
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  color: var(--gray-800);
+}
+
+.username-cell {
+  color: var(--primary-600);
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.username-cell:hover {
+  color: var(--primary-700);
+  text-decoration: underline;
+}
+
+.admin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.admin-modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--surface-primary);
+  padding: var(--space-2xl);
+  border-radius: var(--radius-xl);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--gray-200);
+}
+
+.modal-close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-lg);
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--gray-400);
+  transition: color var(--transition-fast);
+}
+
+.modal-close:hover {
+  color: var(--gray-600);
+}
+
+button[data-action="promote"] {
+  background: linear-gradient(135deg, var(--accent-emerald), #059669);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  margin-right: var(--space-sm);
+}
+
+button[data-action="promote"]:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+button[data-action="demote"] {
+  background: linear-gradient(135deg, var(--accent-amber), #d97706);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  margin-right: var(--space-sm);
+}
+
+button[data-action="demote"]:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+button[data-action="delete-user"] {
+  background: linear-gradient(135deg, var(--accent-rose), #e11d48);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+button[data-action="delete-user"]:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===================================================
+   MESSAGE COMPONENTS
+=================================================== */
+.error-message {
+  color: var(--accent-rose);
+  background: rgba(244, 63, 94, 0.1);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  margin-bottom: var(--space-md);
+  font-weight: 500;
+  animation: slideInDown 0.3s ease-out;
+}
+
+.success-message {
+  color: var(--accent-emerald);
+  background: rgba(16, 185, 129, 0.1);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  margin-bottom: var(--space-md);
+  font-weight: 500;
+  animation: slideInDown 0.3s ease-out;
+}
+
+/* ===================================================
+   DROPDOWN COMPONENTS
+=================================================== */
+.Dropdown {
+  width: 100%;
+  padding: var(--space-md);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  background: var(--surface-primary);
+  color: var(--gray-800);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.Dropdown:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* ===================================================
+   MODAL COMPONENTS
+=================================================== */
+.modal-dialog {
+  margin: var(--space-xl) auto;
+}
+
+.modal-content {
+  border: none;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+  padding: var(--space-lg);
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--gray-800);
+}
+
+.modal-body {
+  padding: var(--space-xl);
+  color: var(--gray-700);
+  line-height: 1.7;
+}
+
+.modal-footer {
+  background: var(--gray-50);
+  border-top: 1px solid var(--gray-200);
+  padding: var(--space-lg);
+}
+
+/* ===================================================
+   ANIMATIONS
+=================================================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInDown {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -455,765 +1210,110 @@ BLOG POST SECTION
     transform: translateY(0);
   }
 }
-/* ==============================
-   FINAL OVERRIDES
-============================== */
 
-/* 1) Change the font for the "Our Latest Blogs" heading */
-.blog-section-title,
-#postsSection h2 {
-  font-family: Geneva, Verdana, sans-serif !important; /* override previous font */
-  font-size: 2rem !important;
-  font-weight: 700 !important;
-  color: #333 !important;
-  margin-bottom: 1.5rem !important;
-  text-align: left !important; /* or center if you prefer */
-}
-
-/* 2) Subtle highlight behind the grid so white cards stand out */
-.blog-grid {
-  background: #f9f9f9 !important; /* a very light gray */
-  padding: 1.5rem;
-  border-radius: 8px;
-}
-
-/* 3) Keep the individual cards white with black text */
-.post-card {
-  background: #fff !important;
-  color: #000 !important;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* softer shadow */
-}
-
-/* If you want to remove any leftover overlay in #postsSection */
-#postsSection.section-container::before {
-  background: none !important;
-  content: none !important;
-}
-
-#postsSection .section-content {
-  background: none !important;
-  color: #000 !important;
-}
-
-/* Make the Create Post heading bolder and larger (while staying white) */
-#createPostSection h3 {
-  color: #9bb3eb !important;         /* white text */
-  font-size: 1.8rem !important;   /* a bit larger than default */
-  font-weight: 700 !important;    /* bold */
-  margin-bottom: 1.2rem;          /* optional spacing */
-}
-
-
-
-.list-group-item .post-text {
-  margin-bottom: 0.5rem; /* small spacing below content */
-}
-
-#postsSection.section-container {
-  color: #fff; /* so text remains readable if needed */
-}
-
-/* Optional: an overlay if you want a semi-transparent look */
-#postsSection.section-container::before {
-  content: "";
-  position: absolute;
-  top: 0; 
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6); 
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Ensure the inner content is above the overlay */
-#postsSection .section-content {
-  position: relative;
-  z-index: 1; /* above overlay */
-}
-
-/* Change the .btn-success color from Bootstrap green to a custom color */
-.btn-success {
-  background-color: #a9dabe !important; 
-  /* match the border color */
-  color: #080000 !important;               /* black text */
-}
-
-/* ==============================
-   CREATE POST SECTION
-============================== */
-/* common bg for all sections*/
-body {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e7c6f8 0%, #f8e7b9 50%, #f7d98c 100%);
-  /* You can tweak the colors/angle as you like */
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-/* Remove any leftover overlay in Create Post if you had a ::before */
-#createPostSection.section-container::before {
-  content: none !important;
-  background: none !important;
-  pointer-events: none;
-  backdrop-filter: none;
-}
-
-/* Translucent gray box for createPostSection .section-content */
-#createPostSection .section-content {
-  position: relative;
-  z-index: 1;
-  margin-top: 4.5rem; 
-  background: #fff !important; /* translucent dark/gray box */
-  color: #343a40 !important;                   /* white text for contrast */
-  border-radius: 10px;
-  padding: 40px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  backdrop-filter: none !important;         /* remove any blur effect */
-}
-
-/* ==============================
-   PROFILE SECTION
-============================== */
-
-
-/* Remove any leftover overlay in Profile if you had a ::before */
-#profileSection.section-container::before {
-  content: none !important;
-  background: none !important;
-  pointer-events: none;
-  backdrop-filter: none;
-}
-
-/* Translucent gray box for profileSection .section-content */
-#profileSection .section-content {
-  position: relative;
-  z-index: 1;
-  background: rgba(0, 0, 0, 0.3) !important; 
-  color: #fff !important;
-  border-radius: 10px;
-  padding: 40px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  backdrop-filter: none !important;
-  margin-top: 1.5rem; 
-}
-
-.post-category-small {
-  font-size: 0.8rem;       /* smaller than normal text */
-  color: #9d6c52 !important;  /* a subtle gray color so it’s not too bright */
-  margin-left: 0.5rem;     /* small spacing from the title */
-  background: none;        /* no background so it blends with white card */
-}
-
-/* Target paragraphs inside the saved posts list items */
-#savedPostsList li p {
-  color: #000 !important; /* black text so it's visible on white bg */
-}
-
-/* Title styling for both main blog posts and saved posts */
-.post-title {
-  font-size: 1.2rem !important; 
-  color: #174cc7  !important;   
-  text-decoration: underline !important; 
-  margin-bottom: 0.5rem;          /* small space below title */
-}
-/* Saved Posts Content smaller than main blog posts */
-#savedPostsGrid .post-title {
-  font-size: 0.9rem !important; 
-}
-
-/* Prevent the child element from inheriting the underline */
-
-.post-title .post-category-small {
-  display: inline-block;        /* break inheritance for text decoration */
-  text-decoration: none !important;
-}
-#viewSavedBtn {
-  background-color: #bdc0c1 !important; /* e.g., a nice blue shade */
-}
-
-/* save icon styling */
-.bookmark-icon {
-  position: absolute;
-  right: 0.8rem;  /* spacing from right edge */
-  bottom: 0.8rem; /* spacing from bottom edge */
-  font-size: 1.4rem; /* slightly bigger icon */
-  color: #1565c0; /* or your preferred color */
-}
-.bookmark-icon:hover {
-  color: #0d47a1;
-}
-
-
-/* Profile Layout Container */
-.profile-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-/* Profile Header - top section with pic + big username */
-#profileHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-/* Big Username style */
-#profileUsername {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-top: 1rem;
-  color: #333; /* or whichever color you want */
-}
-
-/* A container that can center or position the profile pic below "Your Profile" */
-.profile-pic-container {
-  margin: 1.5rem 0; /* spacing from the heading */
-  display: flex;
-  justify-content: center; /* center horizontally */
-}
-
-/* Wrapper ensures the circular shape and relative positioning */
-.profile-pic-wrapper {
-  position: relative; /* IMPORTANT: so the .camera-menu can be placed absolutely */
-  width: 120px;   /* adjust size as you want */
-  height: 120px;
-  border-radius: 50%;
-  background: #f0f0f0; /* fallback gray if no image */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* The actual image is circle-cropped */
-.profile-pic {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Camera icon overlay in the bottom-right, fully visible as a small circle */
-.camera-icon {
-  position: absolute;
-  bottom: 6px; 
-  right: 6px;
-  width: 32px;
-  height: 32px;
-  background: #fff;         /* bright white background circle */
-  color: #1565c0;           /* icon color */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 1001; /* ensure icon is above the menu */
-}
-
-/* Increase icon size, or keep as is */
-.camera-icon i {
-  font-size: 1.2rem;
-}
-
-/* Hover effect for the icon circle */
-.camera-icon:hover {
-  background-color: #f0f0f0; 
-}
-
-/* -------------------------------
-   Camera Menu (dropdown) styling
---------------------------------- */
-
-/* The menu container itself */
-.camera-menu {
-  position: absolute;
-  top: calc(100% + 6px); /* just below the camera icon, adjust if needed */
-  right: 0;
-  background: #fff;      /* white background */
-  color: #000;           /* black text */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  z-index:1000 ;
-  display: none;         /* hidden by default */
-  min-width: 160px;      /* ensure enough width for text */
-  white-space: nowrap;
-}
-
-/* If you toggle a class like .show to display it, you can do: */
-.camera-menu.show {
-  display: block;
-}
-
-/* Each clickable item in the menu */
-.camera-menu-item {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-/* Hover effect for each menu item */
-.camera-menu-item:hover {
-  background: #f0f0f0;
-}
-
-
-
-
-/* Optional styling for your form inputs, etc. */
-.form-control {
-  display: block;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-}
-
-
-/* The normal sub-section (Your Posts, Saved Posts) */
-.profile-subsection {
-  display: block;
-  background: #eee;
-  margin-top: 1rem;
-  padding: 1rem;
-}
-/* Change the color of all h4 headings in .profile-subsection */
-.profile-subsection h4 {
-  color: #007bff; /* or any color code you like */
-}
-
-/* The slide-in panel for Edit Profile */
-.slide-panel {
-  position: fixed;            /* so it sits on top of the main content */
-  top: 0;
-  right: -100%;               /* start off-screen to the right */
-  width: 400px;               /* how wide the panel is */
-  height: 100vh;              /* full viewport height */
-  background: #f8f8f8;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
-  padding: 1.5rem;
-  overflow-y: auto;
-  transition: right 0.4s ease-in-out;
-  z-index: 999;
-}
-
-/* When we add a .show class, it slides in */
-.slide-panel.show {
-  right: 0;
-}
-
-/* The close (X) button */
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #333;
-  cursor: pointer;
-}
-#profileMenu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Add a uniform gap between items */
-  gap: 0.5rem; /* Adjust as needed (e.g., 0.75rem, 1rem) */
-}
-
-#profileName{
-  color: #e6da36; /* e.g., a bright orange color for the typed text */
-}
-
-
-body {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e7c6f8 0%, #f8e7b9 50%, #f7d98c 100%);
-  /* You can tweak the colors/angle as you like */
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ===================================================
+   RESPONSIVE DESIGN
+=================================================== */
+@media (max-width: 768px) {
+  .section-container {
+    padding: var(--space-lg);
+  }
+  
+  .section-content {
+    padding: var(--space-lg);
+  }
+  
+  .home-content {
+    padding: var(--space-xl);
+  }
+  
+  .auth-card {
+    padding: var(--space-lg);
+  }
+  
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .profile-tabs {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  
+  .profile-tabs .tab-button {
+    justify-content: flex-start;
+  }
+  
+  .home-content h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-container {
+    padding: var(--space-md);
+  }
+  
+  .section-content {
+    padding: var(--space-md);
+  }
+  
+  .home-content {
+    padding: var(--space-lg);
+  }
+  
+  .auth-card {
+    padding: var(--space-md);
+  }
+  
+  .navbar .nav-link {
+    padding: var(--space-sm) !important;
+    margin: 0;
+  }
+}
+
+/* ===================================================
+   UTILITY CLASSES
+=================================================== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-1 { margin-top: var(--space-xs); }
+.mt-2 { margin-top: var(--space-sm); }
+.mt-3 { margin-top: var(--space-md); }
+.mt-4 { margin-top: var(--space-lg); }
+
+.mb-1 { margin-bottom: var(--space-xs); }
+.mb-2 { margin-bottom: var(--space-sm); }
+.mb-3 { margin-bottom: var(--space-md); }
+.mb-4 { margin-bottom: var(--space-lg); }
+
+.p-1 { padding: var(--space-xs); }
+.p-2 { padding: var(--space-sm); }
+.p-3 { padding: var(--space-md); }
+.p-4 { padding: var(--space-lg); }
+
+.d-flex { display: flex; }
+.align-items-center { align-items: center; }
+.justify-content-center { justify-content: center; }
+.justify-content-between { justify-content: space-between; }
+
+.w-100 { width: 100%; }
+.h-100 { height: 100%; }
 
 
-/* Manage Users: Search input */
-.form-group {
-  margin-bottom: 1rem;
+.text-muted {
+    color: #0a5dd6 !important;
 }
-#userSearchInput {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Table styling */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.table th,
-.table td {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-/* Make usernames look clickable */
-.username-cell {
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-/* Modal overlay */
-.modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: none; 
-  align-items: center; justify-content: center;
-}
-.modal.hidden {
-  display: flex;
-}
-/* Modal content box */
-.modal-content {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 6px;
-  width: 300px; max-width: 90%;
-  position: relative;
-}
-/* Close “×” button */
-.modal-close {
-  position: absolute;
-  top: 0.5rem; right: 0.75rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-/* Promote = green, Demote = orange */
-button[data-action="promote"] {
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-button[data-action="demote"] {
-  background-color: #fd7e14;
-  color: #fff;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-button[data-action="delete-user"] {
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-
-
-/* Manage Users Section */
-#adminUsersSection {
-  display: none; /* default state: hidden */
-  z-index: 10;
-  position: relative;
-  padding: 2rem;
-  background-color: #fff;
-  color: #000;
-  text-align: left;
-  margin-top: 4.5rem; 
-  min-height: 80vh;
-}
-
-/* Optional: Remove any background overlays from section-container styling */
-#adminUsersSection.section-container::before {
-  content: none !important;
-  background: none !important;
-}
-
-/* Table inside Admin Users Section */
-#adminUsersTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  background-color: #fefefe;
-}
-
-#adminUsersTable th,
-#adminUsersTable td {
-  border: 1px solid #ccc;
-  padding: 0.75rem 1rem;
-  text-align: left;
-  color: #000;
-  background-color: #fff;
-}
-
-#adminUsersTable th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-}
-
-/* Admin-modal overlay (independent of Bootstrap) */
-.admin-modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex;             /* visible by default */
-  align-items: center;
-  justify-content: center;
-}
-.admin-modal.hidden {
-  display: none;             /* hide when .hidden present */
-}
-
-
-
-/* ─────── Profile Tabs ─────── */
-#profileSection .profile-tabs {
-  display: flex;
-  border-bottom: 1px solid #cccccc;
-  margin: 1.5rem 0 1rem;
-  padding: 0;
-}
-
-/* Tab buttons */
-#profileSection .profile-tabs .tab-button {
-  flex: 1;
-  background: transparent;
-  border: none;        
-  padding: 0.75rem 1rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-  cursor: pointer;
-  color: inherit;           /* inherit your section’s text color */
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-#profileSection .profile-tabs .tab-button:hover {
-  opacity: 1;
-}
-
-/* Active tab highlight */
-#profileSection .profile-tabs .tab-button.active {
-  border-bottom: 3px solid var(--accent-color, #007bff);
-  opacity: 1;
-}
-
-/* ─────── Tab Panels ─────── */
-#profileSection .tab-panel {
-  display: block;           /* default visible when no .hidden */
-}
-#profileSection .tab-panel.hidden {
-  display: none;
-}
-
-/* ─────── Utility: hide camera-menu by default ─────── */
-#profileSection .camera-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  display: none;
-  z-index: 10;
-}
-#profileSection .camera-menu.show {
-  display: block;
-}
-
-/* Optional: small padding around panel content */
-#profileSection .tab-panel .profile-content {
-  padding: 1rem 0;
-}
-
-
-/* —— In-tab Edit Profile form styles —— */
-#profileSection .edit-profile-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-#profileSection .edit-profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-#profileSection .edit-profile-form label {
-  color: white;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-#profileSection .edit-profile-form input {
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  color: white;
-  transition: all 0.3s ease;
-}
-
-#profileSection .edit-profile-form input:focus {
-  outline: none;
-  border-color: #ffcc00;
-  background: rgba(255, 255, 255, 0.15);
-}
-
-#profileSection .edit-profile-form input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* “Save” button styling */
-#profileSection .save-btn {
-  align-self: flex-end;
-  margin: 0.8rem auto;            /* ✅ centers horizontally */
-  background: rgb(10, 168, 54);
-  color : #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  border: none; 
-  border-radius: 4px;
-  transition: background 0.3s ease;
-}
-
-#profileSection .save-btn:hover {
-  background:  rgb(34, 148, 36);
-}
-
-/* —— Light-themed Edit Profile form —— */
-#profileSection .edit-profile-container {
-  background: rgb(255, 255, 255); /* light translucent white */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* Labels in black */
-#profileSection .edit-profile-form label {
-  color: #000;
-}
-
-/* Inputs: light background, black text */
-#profileSection .edit-profile-form input {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  color: #000;
-}
-
-/* Input focus: subtle darker bg + blue accent */
-#profileSection .edit-profile-form input:focus {
-  outline: none;
-  border-color: #007bff;
-  background: rgba(0, 0, 0, 0.1);
-}
-
-/* Placeholder text darker */
-#profileSection .edit-profile-form input::placeholder {
-  color: rgba(0, 0, 0, 0.5);
-}
-/* light, faded font for fetched values */
-#profileSection .edit-profile-form input.fetched-value {
-  color: rgba(0, 0, 0, 0.5);
-  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-
-
-/* Brighten the tab text and add a transparent “box” on hover */
-#profileSection .profile-tabs .tab-button {
-  color: #fff;      /* almost-white text */
-  transition: background 0.2s, color 0.2s;
-}
-
-#profileSection .profile-tabs .tab-button:hover {
-  background: rgba(255, 255, 255, 0.15); /* light translucent box */
-  border-radius: 0.25rem;
-  color:#fff;                           /* full white on hover */
-}
-
-#profileSection .profile-tabs .tab-button.active {
-  color: #fff;                           /* ensure active is pure white */
-}
-
-
-/* —— Saved Posts: shrink-wrap & center cards —— */
-#savedPostsGrid.blog-grid {
-  display: grid;
-  /* auto-fit collapses unused columns, so you only get as many tracks as items */
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  /* center the tracks when you have fewer cards than will fill the row */
-  justify-content: center;
-  gap: 1.5rem;
-  /* remove any forced 100% width so it only grows as big as its content rows */
-  width: auto;
-  padding: 1.5rem;
-  background: #f9f9f9 !important;
-  border-radius: 8px;
-  margin: 0 auto; 
-}
-
-/* —— Card constraints & positioning —— */
-#savedPostsGrid .blog-card {
-  position: relative;     
-  width: 100%;            
-  max-width: 320px;       
-}
-
-/* pin the username at top-right of each card */
-#savedPostsGrid .blog-card .username {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.error-message   { color: #c00; background: #fee; padding: .5em; border-radius: 4px; }
-.success-message { color: #060; background: #efe; padding: .5em; border-radius: 4px; }
-
-/* 1) Make sure the card has room at the bottom */
-.blog-card {
-  position: relative;       
-  padding-bottom: 3.5rem;  
-}
-
-/* 2) Force the delete button to sit above the padded area */
-.blog-card .delete-btn {
-  display: block;
-  width: 10%;
-  margin: 0;             
-}
-
-/* 3) Absolutely position the bookmark icon in that padded area */
-.blog-card .bookmark-icon {
-  position: absolute;
-  bottom: 0.75rem;        
-  right: 0.75rem;          
-  z-index: 2;               
-}
-
 

@@ -141,7 +141,9 @@ def delete_blog_post(
         raise HTTPException(status_code=404, detail="Blog post not found")
 
     # 3) Authorization: owner or admin
-    is_owner = str(post["user_id"]) == current_user["_id"]
+
+    is_owner = str(post["user_id"]) == str(current_user["_id"])
+
     is_admin = current_user["role"] == "admin"
     if not (is_owner or is_admin):
         raise HTTPException(status_code=403, detail="Not authorized to delete this post")

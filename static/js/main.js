@@ -1,8 +1,10 @@
 console.log("✅ main.js is successfully loaded!");
+
 // Organizes admin functions in a scoped object
 const App = {
   admin: {}
 };
+
 /************************************************
   DOM References
 ************************************************/
@@ -23,75 +25,108 @@ const navManageUsers = document.getElementById("navManageUsers");
 const signUpLink = document.getElementById("signUpLink");
 const signInLink = document.getElementById("signInLink");
 
-
-// Grab the "Change Password" menu item
-const changePasswordSection = document.getElementById("changePasswordSection");
-//const changePasswordForm = document.getElementById("changePasswordForm");
-
-const yourPostsSection = document.getElementById("yourPostsSection");
-const closeEditProfile = document.getElementById("closeEditProfile");
-const savedPostsSection = document.getElementById("savedPostsSection");
 // Sections
 const registerSection = document.getElementById("registerSection");
 const loginSection = document.getElementById("loginSection");
 const postsSection = document.getElementById("postsSection");
 const createPostSection = document.getElementById("createPostSection");
 
-
 // Forms
 const registerForm = document.getElementById("registerForm");
 const loginForm = document.getElementById("loginForm");
 const createPostForm = document.getElementById("createPostForm");
-const showUpdateUsernameBtn = document.getElementById("showUpdateUsernameBtn");
-const updateUsernameForm = document.getElementById("updateUsernameForm");
-const cancelUpdateBtn = document.getElementById("cancelUpdateBtn");
 
 // Output
 const postsList = document.getElementById("postsGrid");
 
 /**
- *
- * @param {string} containerId  – the ID of the <div> you just added
- * @param {"success"|"error"}  – which CSS class to use
- * @param {string} text         – the message body
+ * Display messages in containers
+ * @param {string} containerId – the ID of the <div> you just added
+ * @param {"success"|"error"} type – which CSS class to use
+ * @param {string} text – the message body
  */
 function showMessage(containerId, type, text) {
   const container = document.getElementById(containerId);
   if (!container) return console.warn("No container for", containerId);
-  //    e.g. if type="error", you get <p class="error-message">…</p>
+  
   container.innerHTML = `<p class="${type}-message">${text}</p>`;
+  
   // auto-dismiss
   setTimeout(() => {
     container.innerHTML = "";
   }, 5000);
 }
 
+/**
+ * Toast notification for specific actions (create/delete posts)
+ * @param {string} message - Message to display
+ * @param {string} type - Type of toast (success, error, info, warning)
+ */
+function showToast(message, type = 'info') {
+  const toastContainer = document.querySelector('.toast-container');
+  if (!toastContainer) return;
+  
+  const toastId = 'toast-' + Date.now();
+  
+  const iconMap = {
+    success: 'bi-check-circle-fill',
+    error: 'bi-x-circle-fill',
+    warning: 'bi-exclamation-triangle-fill',
+    info: 'bi-info-circle-fill'
+  };
+  
+  const bgMap = {
+    success: 'bg-success',
+    error: 'bg-danger',
+    warning: 'bg-warning',
+    info: 'bg-primary'
+  };
+  
+  const toast = document.createElement('div');
+  toast.id = toastId;
+  toast.className = `toast align-items-center text-white ${bgMap[type]} border-0`;
+  toast.setAttribute('role', 'alert');
+  toast.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body d-flex align-items-center">
+        <i class="bi ${iconMap[type]} me-2"></i>
+        ${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
+  
+  toastContainer.appendChild(toast);
+  const bsToast = new bootstrap.Toast(toast, { delay: 4000 });
+  bsToast.show();
+  
+  // Remove from DOM after hiding
+  toast.addEventListener('hidden.bs.toast', () => {
+    toast.remove();
+  });
+}
+
 /************************************************
   Hide/Show Sections
-/************************************************/
-//This clears the screen before showing the next section.
+************************************************/
 function hideAllSections() {
   console.log("hideAllSections() called");
-  // Loops through each of these sections and adds a hidden class to hide it via CSS.
   document.querySelectorAll(".section-container, .auth-section").forEach((el) => { 
     console.log("Hiding section:", el.id);
     el.classList.add("hidden"); 
     el.style.display = "none";
-    
   });
 }
 
-//Shows a specific section by its id after hiding all others
 function showSection(sectionId) {
   console.log(`showSection(${sectionId}) called`);
   hideAllSections();
 
-  const target = document.getElementById(sectionId); // selects the target section by ID
+  const target = document.getElementById(sectionId);
   if (target) {
     console.log(`Showing section: ${sectionId}`);
     target.classList.remove("hidden");
 
-    // Uses "block" for admin sections, "flex" otherwise
     if (["adminUsersSection"].includes(sectionId)) {
       target.style.display = "block";
     } else {
@@ -101,7 +136,6 @@ function showSection(sectionId) {
     console.warn(`No section found with id=${sectionId}`);
   }
 }
-    
 
 //On page load(display sections)
 document.addEventListener("DOMContentLoaded", async () => {
@@ -121,16 +155,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-
-// Selects all HTML elements that have the attribute data-role (delete btn etc..)
 function applyRoleBasedUI() {
   if (!currentUserRole) return;
   document.querySelectorAll("[data-role]").forEach(el => {
     const roles = el.dataset.role.split(" ");
-    el.hidden = !roles.includes(currentUserRole); // If the current user's role is not included in the element’s allowed roles, it sets that ele hidden
+    el.hidden = !roles.includes(currentUserRole);
   });
 }
-
 
 /************************************************
   Navigation Events
@@ -141,57 +172,54 @@ navHome.addEventListener("click", () => {
 
 console.log("🔍 navRegister:", navRegister);
 console.log("🔍 navLogin:   ", navLogin);
-//user registration click
+
 console.log("➤ Attaching register listener");
 navRegister.addEventListener("click", (e) => {
   console.log("🖱️ navRegister clicked – target:", e.target);
   showSection("registerSection");
 });
-//login click
+
 console.log("➤ Attaching login listener");
 navLogin.addEventListener("click", (e) => {
   console.log("🖱️ navLogin clicked – target:", e.target);
   showSection("loginSection");
 });
 
-//create post click
 navCreatePost.addEventListener("click", () => {
   console.log("🛠️ Create Post NAV button clicked!");
   showSection("createPostSection");
 });
 
-//Blog posts click
 navPosts.addEventListener("click", () => {
   console.log("🛠️ Blog Posts button clicked!");
   showSection("postsSection");
   fetchPosts();
 });
 
-navProfile.addEventListener("click", async() => { // await the new user, then reload
+navProfile.addEventListener("click", async() => {
   showSection("profileSection");
   await checkUserStatus();
-  await fetchProfileInfo(); // ✅ Load profile data
+  await fetchProfileInfo();
   fetchProfileForEdit();
   loadUserPosts();
   loadSavedPosts();
 });
 
 signUpLink.addEventListener("click", (e) => {
-  e.preventDefault(); // prevent navigating 
+  e.preventDefault();
   hideAllSections();
-  showSection("registerSection"); // or however you display Register
+  showSection("registerSection");
 });
 
 signInLink.addEventListener("click", (e) => {
   e.preventDefault();
   hideAllSections();
-  showSection("loginSection");    // or however you display Login
+  showSection("loginSection");
 });
 
 /************************************************
   Check User Authentication Status
 ************************************************/
-// decides what section to show(login, reg) or logout, blogpost, profile
 async function checkUserStatus() {
   console.log("checkUserStatus() called");
   try {
@@ -205,15 +233,13 @@ async function checkUserStatus() {
     if (!response.ok) {
       throw new Error("Not authenticated");
     }
-    // The /me response should now have {"id": ..., "username": ...}
     
     const data = await response.json();
     console.log("✅ Logged in as:", data);
 
-    currentUserId   = data.id;     // Store user ID globally
-    currentUserRole = data.role;   // <-- NEW: store role
+    currentUserId   = data.id;
+    currentUserRole = data.role;
     console.log("✅ Current User:", currentUserId, "role=", currentUserRole);
-    // If response is OK, user is logged in
     
     // Hide "Register" and "Login"
     navRegister.classList.add("hidden");
@@ -232,7 +258,7 @@ async function checkUserStatus() {
       navManageUsers.classList.add("hidden");
     }
 
-    return true; // ✅ user is logged in
+    return true;
   } catch (error) {
     console.log("Not authenticated:", error.message);
 
@@ -247,18 +273,15 @@ async function checkUserStatus() {
     navProfile.classList.add("hidden");
     navManageUsers.classList.add("hidden"); 
 
-    return false; // ❌ user not logged in
+    return false;
   }
 }
-
 
 /************************************************
   Logout click
 ************************************************/
 navLogout.addEventListener("click", async () => {
-  
   try {
-    // 2. Call logout endpoint
     const response = await fetch("/logout", {
       method: "POST",
       credentials: "include",
@@ -269,16 +292,11 @@ navLogout.addEventListener("click", async () => {
       return;
     }
 
-
-    // 3. Refresh your user‐status UI logic
     await checkUserStatus();
 
-    // 4. Also clear any hidden attribute on the <li> wrappers so they show immediately
     document.getElementById("navLogin").parentElement.hidden    = false;
     document.getElementById("navRegister").parentElement.hidden = false;
 
-    // 5. Manually re‐toggle the classes for guest/auth links
-    //    (checkUserStatus already toggled these, but we double‐ensure here)
     navRegister.classList.remove("hidden");
     navLogin    .classList.remove("hidden");
 
@@ -286,11 +304,10 @@ navLogout.addEventListener("click", async () => {
     navPosts       .classList.add("hidden");
     navCreatePost  .classList.add("hidden");
     navProfile     .classList.add("hidden");
-    // reset the global so no one can accidentally write into the old user’s bucket
-  currentUserId = null;
+    
+    currentUserId = null;
     navManageUsers .classList.add("hidden");
 
-    // 6. Send them back to Home
     hideAllSections();
     showSection("homeSection");
   } catch (error) {
@@ -298,12 +315,9 @@ navLogout.addEventListener("click", async () => {
   }
 });
 
-
 /************************************************
   Register form for user
 ************************************************/
-
-// Allow only alphabet characters in the username field
 document.getElementById("regUsername").addEventListener("input", function () {
   this.value = this.value.replace(/[^a-zA-Z_-]/g, "");
 });
@@ -317,7 +331,7 @@ registerForm.addEventListener("submit", async (e) => {
   try {
     const response = await fetch("/register", {
       method: "POST",
-      headers: { "Content-Type": "application/json" }, //It sends the title and content as JSON
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({ username, email, password}),
     });
@@ -328,7 +342,7 @@ registerForm.addEventListener("submit", async (e) => {
       showMessage("registerMessage", "error", data.detail || data.message);
     } else {
       showMessage("registerMessage", "success", data.message);
-      registerForm.reset();      // optional: clear fields
+      registerForm.reset();
     }
   } catch (error) {
     showMessage("registerMessage", "error", "Network error – please try again");
@@ -339,12 +353,11 @@ registerForm.addEventListener("submit", async (e) => {
   Loginform User
 ************************************************/
 loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();  // prevent default HTML form reload
+  e.preventDefault();
 
   const username = document.getElementById("loginUsername").value;
   const password = document.getElementById("loginPassword").value;
 
-  // 2) Build a URL-encoded body, FastAPI's OAuth2PasswordRequestForm expects data in this format.
   const body = new URLSearchParams({
     grant_type: "password",
     username,
@@ -352,29 +365,24 @@ loginForm.addEventListener("submit", async (e) => {
   });
 
   try {
-    // 3) POST as x-www-form-urlencoded
     const response = await fetch("/login", {
       method: "POST",
       credentials: "include",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded", //The body is URL-encoded  which matches what OAuth2PasswordRequestForm expects.
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: body.toString(),
     });
 
-    const data = await response.json();  //converts server response to json
+    const data = await response.json();
     console.log("Login response:", response.status, data);
     if (response.ok) {
       showMessage("loginMessage", "success", data.message);
 
-      // 1) Update UI for logged-in user
       await checkUserStatus();
       applyRoleBasedUI();    
 
-      // 2) Immediately hide all sections
       hideAllSections(); 
-
-      // 3) Show your default section after login ,
       showSection("postsSection"); 
       fetchPosts(); 
 
@@ -407,9 +415,9 @@ createPostForm.addEventListener("submit", async (e) => {
   try {
     const response = await fetch("/blog_posts", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },//It sends the title and content as JSON
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ title, content, category}), //sends the actual data.
+      body: JSON.stringify({ title, content, category}),
     });
 
     const data = await response.json();
@@ -417,21 +425,18 @@ createPostForm.addEventListener("submit", async (e) => {
 
     if (response.ok) {
       showMessage("createPostMessage", "success", "✅ Post created successfully!");
-      document.getElementById("postTitle").value = ""; // reset the form
+      showToast("Post created successfully! 🎉", "success"); // Toast for post creation
+      document.getElementById("postTitle").value = "";
       document.getElementById("postContent").value = "";
 
-      // Refresh posts section with added post
       fetchPosts();
     } else {
       showMessage("createPostMessage", "error", data.detail || "❌ Error creating post");
-
     }
   } catch (error) {
     showMessage("createPostMessage", "error", "❌ Error creating post: " + error.message);
   }
 });
-
-
 
 /************************************************
   Attach Edit/Delete Buttons to Posts
@@ -439,25 +444,23 @@ createPostForm.addEventListener("submit", async (e) => {
 function attachPostButtonListeners() {
   console.log("🛠️ Attaching event listeners for Edit and Delete buttons...");
 
-  document.querySelectorAll(".edit-btn").forEach((button) => { // for each edit button attach listner
+  document.querySelectorAll(".edit-btn").forEach((button) => {
     button.addEventListener("click", (e) => {
-      const postId = e.target.dataset.id; //postId is taken from the button's data-id attribute.
-      const title = decodeURIComponent(e.target.dataset.title);
-      const content = decodeURIComponent(e.target.dataset.content);
-      editPost(postId, title, content); // calls the editPost function, passing details
+      const postId = e.currentTarget.dataset.id;
+      const title = decodeURIComponent(e.currentTarget.dataset.title);
+      const content = decodeURIComponent(e.currentTarget.dataset.content);
+      editPost(postId, title, content);
     });
   });
 
   document.querySelectorAll(".delete-btn").forEach((button) => {
     button.addEventListener("click", (e) => {
-      const postId = e.target.dataset.id;
+      const postId = e.currentTarget.dataset.id;
+      console.log("postId",postId)
       deletePost(postId);
     });
   });
 }
-
-
-
 
 /************************************************
   Fetch Blog Posts
@@ -465,26 +468,23 @@ function attachPostButtonListeners() {
 async function fetchPosts() {
   console.log("🛠️ Fetching blog posts...");
 
-  // Helper to truncate text
   function getTruncatedContent(fullText, limit = 15) {
     const words = fullText.split(" ");
     if (words.length <= limit) {
       return { shortText: fullText, isTruncated: false };
     }
-    const truncated = words.slice(0, limit).join(" ") + "..."; //If the content is longer, it takes first 15 and join them into single str and adds "..." and says it's truncated.
+    const truncated = words.slice(0, limit).join(" ") + "...";
     return { shortText: truncated, isTruncated: true };
   }
 
   try {
-    // Check if user is logged in
     const userResponse = await fetch("/me", { credentials: "include" });
     if (!userResponse.ok) {
       throw new Error("⚠️ Failed to get user info. Please log in again.");
     }
     const userData = await userResponse.json();
-    const {id: currentUserId, role: currentUserRole } = userData; //If it succeeds, gets the logged-in user's id
+    const {id: currentUserId, role: currentUserRole } = userData;
 
-    // Fetch all blog posts from server
     const response = await fetch("/blog_posts", {
       method: "GET",
       credentials: "include",
@@ -494,53 +494,46 @@ async function fetchPosts() {
       return showMessage("postsMessage", "error", errData.detail || "Error fetching posts");
     }
     const posts = await response.json();
-    blogPosts = posts;      //After loading /blog_posts, assigned posts to blogposts
+    // Sort posts by date (most recent first)
+    posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    blogPosts = posts;
 
     console.log("📜 Fetched Posts:", posts);
 
-    // Clear existing grid
     const grid = document.getElementById("postsGrid");
     if (!grid) {
       console.error("❌ #postsGrid not found in DOM!");
       return;
     }
     grid.innerHTML = "";
-    document.getElementById("postsMessage").innerHTML = ""; // clear any prior msg
+    document.getElementById("postsMessage").innerHTML = "";
 
     let hasVisiblePosts = false;
 
     posts.forEach((post, i) => {
-      // skip user's own posts, if not admin
       if (post.user_id === currentUserId && currentUserRole === "user") {
         return;
       }
-      hasVisiblePosts = true;     // helps decide if a message like "No posts found" should be shown or not
+      hasVisiblePosts = true;
 
-      // fallback for title/content, Handle missing data safely
       const postTitle = (post.title && post.title !== "undefined") ? post.title : "Untitled";
       const postContent = (post.content && post.content !== "undefined") ? post.content : "No content provided";
       const username = (post.username && post.username !== "undefined") ? post.username : "Unknown User";
       const postCategory = (post.category && post.category !== "undefined") ? post.category : "general";
 
-      // truncate
       const { shortText, isTruncated } = getTruncatedContent(postContent, 15); 
-
-      //condition to enable delete button
+      //checks for admin access to show delete for all posts
       const canDelete =
         currentUserRole === "admin" ||
         (currentUserRole === "user" && post.user_id === currentUserId);
 
-      //Create a blog card
       const card = document.createElement("div");
       card.classList.add("blog-card");
-      card.style.position = "relative"; // Ensure the card is relative for absolute positioning
+      card.style.position = "relative";
 
-
-      // 1) Convert the ISO string to a JS Date, then format to just the date part:
       const createdAt = new Date(post.created_at);
       const formattedDate = createdAt.toLocaleDateString(); 
 
-      // insert HTML, Header: Username and Date
       card.innerHTML = `
         <div class="card-header">      
           <span class="username" data-user-id="${post.user_id}">@${username}</span>
@@ -552,13 +545,10 @@ async function fetchPosts() {
         <p class="post-content">${shortText}</p>
         ${
           isTruncated
-            ? `<a href="#" class="read-more" data-post-index="${i}">Read more</a>` //Tagged each “Read more” link with an index
+            ? `<a href="#" class="read-more" data-post-index="${i}">Read more</a>`
             : ""
         }
 
-
-
-        <!-- The delete and bookmark icons in bottom-right corner -->
         <div style="display: flex; gap: 10px; justify-content: flex-end; align-items: center; margin-top: 10px;">
           ${
             canDelete
@@ -577,17 +567,12 @@ async function fetchPosts() {
           </i>
         </div>
       `;
-        
-      //data-id holds the post's ID to identify which post to delete on click.
 
-      // append to the grid
       grid.appendChild(card);
-
       attachPostButtonListeners();
     });
     
-
-    // 🔹 After creating all cards, attach the .bookmark-icon listeners:(button for saving posts)
+    // Event listners for save Icons
     document.querySelectorAll(".bookmark-icon").forEach(icon => {
       icon.addEventListener("click", function() {
         const postId = this.dataset.id;
@@ -595,17 +580,14 @@ async function fetchPosts() {
         const postContent = this.dataset.content;
         const userName = this.dataset.username;
 
-        const key = getSavedKey(); // ← use per-user key
+        const key = getSavedKey();
         let savedPosts = JSON.parse(localStorage.getItem(key)) || [];
 
-        // Check if already saved
         const alreadySaved = savedPosts.some(sp => sp.id === postId);
         if (alreadySaved) {
           return showMessage("postsMessage", "error", "This Post is already saved!");
-          
         }
 
-        // Push post data (including username) into localStorage
         savedPosts.push({ 
           id: postId, 
           title: postTitle, 
@@ -615,24 +597,20 @@ async function fetchPosts() {
         localStorage.setItem(key, JSON.stringify(savedPosts));
 
         showMessage("postsMessage", "success", "✅ Post saved successfully");
-
         loadSavedPosts();
       });
     });
 
-    // ─── listens for click on “Read more”, → opens our Bootstrap modal ──────────────────────
     document
       .getElementById("postsGrid")
       .addEventListener("click", (e) => {
         if (!e.target.classList.contains("read-more")) return;
         e.preventDefault();
 
-        //Retrieve the full post object
         const idx = Number(e.target.dataset.postIndex);
         const post = blogPosts[idx];
         if (!post) return;
 
-        // fill in the modal
         document.getElementById("postModalLabel").textContent = post.title;
         document.getElementById("postModalBody").textContent = post.content;
         document.getElementById("postModalMeta").textContent = [
@@ -643,35 +621,31 @@ async function fetchPosts() {
           .filter(Boolean)
           .join(" • ");
 
-        // show modal on screen
-        new bootstrap.Modal(      //bootstrap api that handles show/hide, backdrop, focus trapping, and animations for you.
+        new bootstrap.Modal(
           document.getElementById("postModal")
         ).show();
       })
 
-  
-    // 7) If no posts were visible, show a “No blog posts available” message
     if (!hasVisiblePosts) {
       grid.innerHTML = '<p style="color: red; font-weight: bold;">No blog posts available.</p>';
     }
 
-    // Search/filter logic
+    // Search bar 
     const searchBar = document.getElementById("blogSearchBar");
-    const searchBtn = document.getElementById("blogSearchBtn");
     if (searchBar) {
       searchBar.addEventListener("keyup", function () {
         const query = this.value.toLowerCase();
 
-        // For each .blog-card, check if title text includes query
         document.querySelectorAll(".blog-card").forEach((card) => {
           const titleEl = card.querySelector(".post-title");
           const catEl = card.querySelector(".post-category");
+          const userEl = card.querySelector(".username");
 
           const titleText = titleEl ? titleEl.textContent.toLowerCase() : "";
           const catText = catEl ? catEl.textContent.toLowerCase() : "";
+          const userText = userEl ? userEl.textContent.toLowerCase() : "";
 
-          // If query is found in the title, show; otherwise hide
-          if (titleText.includes(query)||catText.includes(query)) {
+          if (titleText.includes(query)||catText.includes(query)||userText.includes(query)) {
             card.style.display = "block";
           } else {
             card.style.display = "none";
@@ -690,16 +664,26 @@ async function fetchPosts() {
   }
 }
 
-
 /************************************************
   Edit & Delete Posts
 ************************************************/
-async function editPost(id, title, content) {
-  const newTitle = prompt("✏️ Update Title:", title);
-  if (newTitle === null) return;
+function editPost(id, title, content) {
+  // 1. Prefill the modal form fields with current post data
+  document.getElementById("editPostId").value = id;
+  document.getElementById("editPostTitle").value = title;
+  document.getElementById("editPostContent").value = content;
 
-  const newContent = prompt("📝 Update Content:", content);
-  if (newContent === null) return;
+  // 2. Show the Bootstrap modal
+  const modal = new bootstrap.Modal(document.getElementById("editPostModal"));
+  modal.show();
+}
+
+document.getElementById("editPostForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const id = document.getElementById("editPostId").value;
+  const newTitle = document.getElementById("editPostTitle").value;
+  const newContent = document.getElementById("editPostContent").value;
 
   const formData = new FormData();
   formData.append("title", newTitle);
@@ -713,8 +697,10 @@ async function editPost(id, title, content) {
     });
 
     if (response.ok) {
-      showMessage("userPostsMessage","success", "✅ Post updated Succesfully!");  
+      showMessage("userPostsMessage","success", "✅ Post updated Successfully!");  
+      bootstrap.Modal.getInstance(document.getElementById("editPostModal")).hide(); // Hide modal after clicking update
       fetchPosts();
+      loadUserPosts();
     } else {
       const errorData = await response.json();
       showMessage(
@@ -722,20 +708,17 @@ async function editPost(id, title, content) {
         "error",
         errorData.detail || "❌ Error updating post"
       );
-      
     }
   } catch (error) {
     showMessage(
       "userPostsMessage",
       "error",
-      "❌ Network error — could not update profile: " + err.message
+      "❌ Network error — could not update profile: " + error.message
     );
   }
-}
+});
 
 async function deletePost(id) {
-  // if (!confirm("🗑️ Are you sure you want to delete this post?")) return;
-
   try {
     const response = await fetch(`/blog_posts/${id}`, {
       method: "DELETE",
@@ -748,7 +731,10 @@ async function deletePost(id) {
         "success",
         "✅ Blog post deleted successfully!"
       );
+      showToast("Post deleted successfully! 🗑️", "success"); // Toast for post deletion
+      loadUserPosts();
       fetchPosts();
+    
     } else {
       const errorData = await response.json();
       showMessage(
@@ -763,11 +749,8 @@ async function deletePost(id) {
       "error",
       "❌ Error deleting post: " + error.message
     );
-    
   }
 }
-
-
 
 function getSavedKey() {
   if (!currentUserId) {
@@ -778,28 +761,24 @@ function getSavedKey() {
   console.log("🔑 getSavedKey() →", key);
   return key;
 }
-//To get user profileInfo
-function loadSavedPosts() {
 
+function loadSavedPosts() {
   const savedPostsGrid = document.getElementById("savedPostsGrid");
   if (!savedPostsGrid) return;
 
-  savedPostsGrid.innerHTML = ""; // Clear old posts
+  savedPostsGrid.innerHTML = "";
 
-  // 1) Retrieve from localStorage using per-user key
   const key = getSavedKey();
   const savedPosts = JSON.parse(localStorage.getItem(key)) || []
   
   console.log("Loading saved posts for user:", currentUserId);
   console.log("Found this array:", savedPosts);
 
-  // 2) If no saved, show message
   if (savedPosts.length === 0) {
     savedPostsGrid.innerHTML = '<p class="no-posts-message">No posts are saved.</p>';
     return;
   }
   
-  // 3) Helper to truncate text (similar to your fetchPosts code)
   function getTruncatedContent(fullText, limit = 15) {
     const words = fullText.split(" ");
     if (words.length <= limit) {
@@ -809,19 +788,15 @@ function loadSavedPosts() {
     return { shortText: truncated, isTruncated: true };
   }
 
-  // 4) Build a card for each saved post
   savedPosts.forEach((post, index) => {
-    // fallback for title/content/username
     const postTitle = (post.title && post.title !== "undefined") ? post.title : "Untitled";
     const postContent = (post.content && post.content !== "undefined") ? post.content : "No content provided";
     const username = (post.username && post.username !== "undefined") ? post.username : "Unknown User";
   
-    // truncate if needed
     const { shortText, isTruncated } = getTruncatedContent(postContent, 15);
 
-    // create a card div
     const card = document.createElement("div");
-    card.classList.add("blog-card"); // same class as your main posts
+    card.classList.add("blog-card");
 
     card.innerHTML = `
       <span class="username">@${username}</span>
@@ -840,10 +815,8 @@ function loadSavedPosts() {
       </button>
     `;
 
-    // append card to savedPostsGrid
     savedPostsGrid.appendChild(card);
 
-    // read more logic
     if (isTruncated) {
       const readMoreLink = card.querySelector(".read-more");
       let isExpanded = false;
@@ -863,44 +836,37 @@ function loadSavedPosts() {
       });
     }
   });
- // 🔹 Attach Unsave logic after creating all cards
- document.querySelectorAll(".unsave-btn").forEach(button => { //Find all buttons with the class .unsave-btn
-  button.addEventListener("click", function() {        //Add a click event listener to each button:
+
+ document.querySelectorAll(".unsave-btn").forEach(button => {
+  button.addEventListener("click", function() {
     const index = parseInt(this.dataset.index, 10); 
     removeSavedPost(index);
   });
 });
 }
 
-// to remove posts from saved
 function removeSavedPost(index) {
   const key = getSavedKey();
   let savedPosts = JSON.parse(localStorage.getItem(key)) || [];
   if (index >= 0 && index < savedPosts.length) {
-    // Remove the post at this index
     savedPosts.splice(index, 1);
     localStorage.setItem(key, JSON.stringify(savedPosts));
-    // Re-load the saved posts to reflect changes
     loadSavedPosts();
   }
 }
 
-
-// Helper Function to truncate text
-  function getTruncatedContent(fullText, limit = 10) {
-    const words = fullText.split(" ");
-    if (words.length <= limit) {
-      return { shortText: fullText, isTruncated: false };
-    }
-    const truncated = words.slice(0, limit).join(" ") + "...";
-    return { shortText: truncated, isTruncated: true };
+function getTruncatedContent(fullText, limit = 10) {
+  const words = fullText.split(" ");
+  if (words.length <= limit) {
+    return { shortText: fullText, isTruncated: false };
   }
-
+  const truncated = words.slice(0, limit).join(" ") + "...";
+  return { shortText: truncated, isTruncated: true };
+}
 
 
 async function loadUserPosts() {
   try {
-    // 1) Fetch profile data to get user posts
     const response = await fetch("/profile", {
       method: "GET",
       credentials: "include"
@@ -912,27 +878,23 @@ async function loadUserPosts() {
         "error",
         errData.detail || "Error fetching profile for user posts"
       );
-      
     }
 
     const data = await response.json();
     console.log("Profile data (for user posts):", data);
 
-    // 2) Grab the container where we display user posts
     const userPostsList = document.getElementById("userPostsList");
     if (!userPostsList) {
       console.error("No #userPostsList element found!");
       return;
     }
-    userPostsList.innerHTML = ""; // Clear old posts
+    userPostsList.innerHTML = "";
 
-    // 3) If user has no posts, display a message
     if (!data.posts || data.posts.length === 0) {
       userPostsList.innerHTML = "<li class='list-group-item'>No posts yet.</li>";
       return;
     }
 
-    // 4) Helper to truncate text (same as your original logic)
     function getTruncatedContent(fullText, limit = 10) {
       const words = fullText.split(" ");
       if (words.length <= limit) {
@@ -942,18 +904,16 @@ async function loadUserPosts() {
       return { shortText: truncated, isTruncated: true };
     }
 
-    // 5) Render each user post into #userPostsList
     data.posts.forEach((post) => {
+      console.log("post",post)
       const postTitle = post.title ? post.title : "Untitled";
       const postContent = post.content ? post.content : "No content provided";
 
-      // Encoded for safe passing in data attributes (if needed for editing)
       const encodedTitle = encodeURIComponent(postTitle);
       const encodedContent = encodeURIComponent(postContent);
 
       const { shortText, isTruncated } = getTruncatedContent(postContent, 10);
 
-      // Create a list item with a small layout for Edit/Delete
       const listItem = document.createElement("li");
       listItem.classList.add(
         "list-group-item", 
@@ -962,7 +922,6 @@ async function loadUserPosts() {
         "align-items-start"
       );
 
-      // Construct the inner HTML
       listItem.innerHTML = `
         <div class="flex-grow-1">
           <strong class="mb-1 d-block">${postTitle}</strong>
@@ -979,7 +938,6 @@ async function loadUserPosts() {
             data-id="${post.id}"
             data-title="${encodedTitle}"
             data-content="${encodedContent}"
-            
           >
             <i class="bi bi-pencil-square"></i>
           </button>
@@ -994,7 +952,6 @@ async function loadUserPosts() {
 
       userPostsList.appendChild(listItem);
 
-      // 6) "Read more" toggle logic
       if (isTruncated) {
         const readMoreLink = listItem.querySelector(".read-more");
         readMoreLink.addEventListener("click", (e) => {
@@ -1006,14 +963,13 @@ async function loadUserPosts() {
             postText.textContent = shortText;
             readMoreLink.textContent = "Read more";
           } else {
-            postText.textContent = postContent; // Show full content
+            postText.textContent = postContent;
             readMoreLink.textContent = "Show less";
           }
         });
       }
     });
 
-    // 7) Finally, attach your Edit/Delete button listeners
     attachPostButtonListeners();
     
   } catch (error) {
@@ -1025,9 +981,6 @@ async function loadUserPosts() {
     );
   }
 }
-
-
-
 
 async function fetchProfileInfo() {
   try {
@@ -1047,26 +1000,19 @@ async function fetchProfileInfo() {
 
     const data = await response.json();
     console.log("Profile data:", data);
-    // Now we display 'name' in the big bold spot
+    
     document.getElementById("profileName").textContent = data.name || "No name set";
 
-    // If there's a photo URL, display it
     if (data.photo_url) {
       document.getElementById("profilePic").src = data.photo_url;
     }
 
-    // Fill the basic profile info
     const profileInfo = document.getElementById("profileInfo");
     profileInfo.innerHTML = `
       <p><strong>Username:</strong> ${data.username}</p>
       <p><strong>Total Posts:</strong> ${data.total_posts}</p>
       <hr>
-      <!-- We create a placeholder for 'Your Posts' but we won't render them here -->
     `;
-
-    // Done! We no longer auto-render data.posts in this function.
-    // If you want to actually populate #userPostsList, do it in a separate function 
-    // e.g. loadUserPosts() that fetches or uses the same data.
 
   } catch (error) {
     showMessage(
@@ -1077,10 +1023,7 @@ async function fetchProfileInfo() {
   }
 }
 
-
-
-
-// 1) Listen for camera icon click to open file picker
+// Camera functionality
 const cameraIcon = document.getElementById("cameraIcon");
 const uploadProfilePic = document.getElementById("uploadProfilePic");
 const cameraMenu = document.getElementById("cameraMenu");
@@ -1088,8 +1031,6 @@ const choosePhoto = document.getElementById("choosePhoto");
 const removePhoto = document.getElementById("removePhoto");
 const profilePic = document.getElementById("profilePic");
 
-
-// 1) Toggle dropdown on camera icon click
 if (cameraIcon && cameraMenu) {
   cameraIcon.addEventListener("click", () => {
     console.log("✅ cameraIcon was clicked!");
@@ -1097,17 +1038,13 @@ if (cameraIcon && cameraMenu) {
   });
 }
 
-// 2) "Choose from system" triggers file input
 if (choosePhoto && uploadProfilePic) {
   choosePhoto.addEventListener("click", () => {
-    // Hide the menu
     cameraMenu.classList.remove("show")
-    // Trigger file input
     uploadProfilePic.click();
   });
 }
 
-// 3) On file selection, do your usual upload logic
 if (uploadProfilePic) {
   uploadProfilePic.addEventListener("change", async function(event) {
     const file = event.target.files[0];
@@ -1128,12 +1065,11 @@ if (uploadProfilePic) {
         return showMessage(
           "profileMessage",
           "error",
-          data.detail || "Error uploading photo"
+          errData.detail || "Error uploading photo"
         );
       }
 
       const data = await response.json();
-      // Update the src of #profilePic
       profilePic.src = data.photo_url;
       showMessage(
         "profileMessage",
@@ -1142,23 +1078,19 @@ if (uploadProfilePic) {
       );
     } catch (error) {
       console.error("Upload error:", error);
-      console.error("Upload error:", err);
       showMessage(
         "profileMessage",
         "error",
-        "Error uploading photo: " + err.message
+        "Error uploading photo: " + error.message
       );
     }
   });
 }
 
-// 4) "Remove photo" calls a remove endpoint
 if (removePhoto) {
   removePhoto.addEventListener("click", async () => {
-    // Hide the menu
     cameraMenu.classList.add("hidden");
 
-    // Confirm user wants to remove
     if (!confirm("Remove your profile photo?")) return;
 
     try {
@@ -1172,11 +1104,10 @@ if (removePhoto) {
         return showMessage(
           "profileMessage",
           "error",
-          data.detail || "Error removing photo"
+          errData.detail || "Error removing photo"
         );
       }
 
-      // On success, revert #profilePic to default icon
       profilePic.src =  "/static/images/default profile picture.png";
 
       showMessage(
@@ -1196,49 +1127,42 @@ if (removePhoto) {
   });
 }
 
-// c) Tab behavior
-  const tabButtons = document.querySelectorAll(".profile-tabs .tab-button");
-  const tabPanels  = document.querySelectorAll(".tab-panel");
+// Tab behavior
+const tabButtons = document.querySelectorAll(".profile-tabs .tab-button");
+const tabPanels  = document.querySelectorAll(".tab-panel");
 
-  // 1) No button starts active
-  tabButtons.forEach(b => b.classList.remove("active"));
-  // All panels start hidden
-  tabPanels.forEach(p => p.classList.add("hidden"));
+tabButtons.forEach(b => b.classList.remove("active"));
+tabPanels.forEach(p => p.classList.add("hidden"));
 
-  tabButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const targetId = btn.dataset.target;
-      const panel   = document.getElementById(targetId);
-      const isOpen  = btn.classList.contains("active");
+tabButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const targetId = btn.dataset.target;
+    const panel   = document.getElementById(targetId);
+    const isOpen  = btn.classList.contains("active");
 
-      // 2) If already open, just close it
-      if (isOpen) {
-        btn.classList.remove("active");
-        panel.classList.add("hidden");
-        return;
-      }
-      // 3) Otherwise, close everything…
-      tabButtons.forEach(b => b.classList.remove("active"));
-      tabPanels.forEach(p => p.classList.add("hidden"));
-      // 4) …then open this one
-      btn.classList.add("active");
-      panel.classList.remove("hidden");
-      // show/hide panels
-      // Load content for this tab:
-      if (targetId === "yourPostsPanel") {
-        loadUserPosts();
-      } else if (targetId === "savedPostsPanel") {
-        loadSavedPosts();
-      } else if (targetId === "editProfilePanel") {
-      // Re-load this user’s profile into the edit form every time
+    if (isOpen) {
+      btn.classList.remove("active");
+      panel.classList.add("hidden");
+      return;
+    }
+    
+    tabButtons.forEach(b => b.classList.remove("active"));
+    tabPanels.forEach(p => p.classList.add("hidden"));
+    
+    btn.classList.add("active");
+    panel.classList.remove("hidden");
+    
+    if (targetId === "yourPostsPanel") {
+      loadUserPosts();
+    } else if (targetId === "savedPostsPanel") {
+      loadSavedPosts();
+    } else if (targetId === "editProfilePanel") {
       fetchProfileForEdit();
-      }
-      // changePasswordPanel has no preload
-    });
+    }
+  });
 });
 
-//EDIT PROFILE HANDLER
-// 1) Fetch current profile & pre-fill the form
+// Edit profile functionality
 async function fetchProfileForEdit() {
   try {
     const res = await fetch("/profile", {
@@ -1254,13 +1178,12 @@ async function fetchProfileForEdit() {
       );
     }
     const data = await res.json();
-    // Helper to apply faded style
+    
     function applyFetched(inputId, value) {
       const input = document.getElementById(inputId);
       if (!input || !value) return;
       input.value = value;
       input.classList.add("fetched-value");
-      // On first user edit, remove the faded style
       input.addEventListener("input", () => {
         input.classList.remove("fetched-value");
       }, { once: true });
@@ -1280,9 +1203,6 @@ async function fetchProfileForEdit() {
   }
 }
 
-
-// 2) “Save Changes” button handler
-
 document.getElementById("newName").addEventListener("input", function () {
   this.value = this.value.replace(/[^a-zA-Z]/g, "");
 });
@@ -1293,7 +1213,6 @@ document.getElementById("newUsername").addEventListener("input", function () {
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 if (saveProfileBtn) {
   saveProfileBtn.addEventListener("click", async () => {
-    // Grab & trim values
     const nameEl     = document.getElementById("newName");
     const userEl     = document.getElementById("newUsername");
     const emailEl    = document.getElementById("newEmail");
@@ -1301,7 +1220,6 @@ if (saveProfileBtn) {
     const newUsername = userEl    ? userEl.value.trim()     : "";
     const newEmail    = emailEl   ? emailEl.value.trim()    : "";
 
-    // Build FormData with only non-empty fields
     const fd = new FormData();
     if (newName)     fd.append("new_name",      newName);
     if (newUsername) fd.append("new_username",  newUsername);
@@ -1329,15 +1247,16 @@ if (saveProfileBtn) {
         "success",
         result.message || "✅ Profile updated successfully!"
       );
-      // 2) Close the Edit Profile panel
-      const editBtn   = document.querySelector('.tab-button[data-target="editProfilePanel"]');
-      const editPanel = document.getElementById('editProfilePanel');
-      if (editBtn && editPanel) {
-        editBtn.classList.remove('active');
-        editPanel.classList.add('hidden');
-      }
+      
+      setTimeout(() => {
+        const editBtn   = document.querySelector('.tab-button[data-target="editProfilePanel"]');
+        const editPanel = document.getElementById('editProfilePanel');
+        if (editBtn && editPanel) {
+          editBtn.classList.remove('active');
+          editPanel.classList.add('hidden');
+        }
+      }, 3000);
 
-      // 5) (Optional) Re-fetch to update header/info
       await fetchProfileForEdit();
 
     } catch (err) {
@@ -1351,25 +1270,23 @@ if (saveProfileBtn) {
   });
 }
 
-
-
-// ─── Change Password submission Handler ───
+// Change password functionality
 ;(function(){
   const savePasswordBtn   = document.getElementById("savePasswordBtn");
   const form = document.getElementById("changePasswordForm");
-  if (!savePasswordBtn || !changePasswordForm) return;
+  if (!savePasswordBtn || !form) return;
 
   savePasswordBtn.addEventListener("click", async (e) => {
-    e.preventDefault(); // stop the native form submission
+    e.preventDefault();
 
     const oldPwd     = document.getElementById("oldPassword")?.value.trim()     || "";
     const newPwd     = document.getElementById("newPassword")?.value.trim()     || "";
     const confirmPwd = document.getElementById("confirmPassword")?.value.trim() || "";
 
-    // 1) Basic validation
     if (!oldPwd || !newPwd || !confirmPwd) {
       return showMessage("changePasswordMessage", "error", "Please fill out all fields");
     }
+
     if (newPwd !== confirmPwd) {
       return showMessage(
         "changePasswordMessage",
@@ -1377,53 +1294,54 @@ if (saveProfileBtn) {
         "❌ New passwords do not match"
       );
     }
-
-    // 2) Build the payload
+    
+    // if everything is valid in form inputs, it creates formData 
     const fd = new FormData();
     fd.append("current_password", oldPwd);
     fd.append("new_password",     newPwd);
 
     try {
-      // 3) Send to your FastAPI endpoint
       const res  = await fetch("/change_password", {
         method: "PUT",
         credentials: "include",
         body: fd
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "Error changing password");
+      if (!res.ok) {
+        throw { 
+          status: res.status,
+          message: data.detail || "Error changing password"
+        };
+      }
 
-      // 4) Success
       showMessage(
         "changePasswordMessage",
         "success",
         data.message || "✅ Password updated successfully!"
-      );
+      ); 
 
-      // 5) Collapse the Change Password tab
-      const btn   = document.querySelector('.tab-button[data-target="changePasswordPanel"]');
-      const panel = document.getElementById("changePasswordPanel");
-      if (btn && panel) {
-        btn.classList.remove("active");
-        panel.classList.add("hidden");
-      }
+      /* setTimeout(() => {
+        const btn   = document.querySelector('.tab-button[data-target="changePasswordPanel"]');
+        const panel = document.getElementById("changePasswordPanel");
+        if (btn && panel) {
+          btn.classList.remove("active");
+          panel.classList.add("hidden");
+        }
+      }, 3000); */
+
     } catch (err) {
       console.error("Change password failed:", err);
       showMessage(
         "changePasswordMessage",
         "error",
-        "❌ Network error: " + err.message
+        `❌ ${err.message}`
+
       );
     }
   });
 })();
 
-
-
-
-
-// NAV ITEMS FOR ADMIN SECTIONS
-//const navManageUsers = document.getElementById("navManageUsers");
+// Admin section
 console.log("navManageUsers element is:", navManageUsers);
 if (navManageUsers) {
   navManageUsers.addEventListener("click", () => {
@@ -1437,17 +1355,13 @@ else {
   console.warn("⚠️ navManageUsers not found in DOM!");
 }
 
-
-// ───────────────────────────────────────────────────────────────────────────
-// Admin: Manage Users logic
-// ───────────────────────────────────────────────────────────────────────────
+// Admin functions
 App.admin.loadUsers = async () => {
   console.log("📥 Admin user loader called!");
   try {
     const res = await fetch('/admin/users', { credentials: 'include' });
     const users = await res.json();
     const tbody = document.querySelector('#adminUsersSection #adminUsersTable tbody');
-    tbody.innerHTML = '<tr><td colspan="5" style="color:red;">⚠️ JavaScript ran but table failed to populate</td></tr>';
     tbody.innerHTML = '';
     users.forEach(u => {
       console.log("Rendering user:", u.username);
@@ -1492,13 +1406,11 @@ App.admin.openUserModal = async (userId) => {
     console.error(e);
     showMessage("adminMessage", "error", "Failed to load user details: " + e.message);
   }
-  
 };
 
 App.admin.closeUserModal = () => {
   document.getElementById('userDetailModal').classList.add('hidden');
 };
-
 
 App.admin.handleUserActions = async (evt) => {
   const btn = evt.target;
@@ -1530,7 +1442,6 @@ App.admin.handleUserActions = async (evt) => {
       return showMessage("adminMessage", "error", "Action failed: " + err);
     }
     showMessage("adminMessage", "success", "Action succeeded");
-    // reload the table after change
     App.admin.loadUsers();
   } catch (e) {
     console.error(e);
@@ -1546,6 +1457,3 @@ document.addEventListener('click', (evt) => {
     App.admin.openUserModal(evt.target.dataset.id);
   }
 });
-
-
-

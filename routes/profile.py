@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile,
 from typing import Optional
 from config.auth_deps import get_current_user_from_cookie, verify_password, hash_password
 from bson import ObjectId
-#from fastapi.templating import Jinja2Templates
+from fastapi.templating import Jinja2Templates
 import os
 from datetime import datetime, timezone, timedelta
 from email.message import EmailMessage
@@ -16,7 +16,7 @@ SMTP_PASS = os.getenv("EMAIL_PASSWORD")
 
 router = APIRouter(tags=["profile"])
 
-
+templates = Jinja2Templates(directory="templates")
 
 @router.get(
     "/profile",
@@ -196,7 +196,7 @@ def send_password_change_email(to_email: str, confirm_link: str, reject_link: Op
 
 
 @router.get("/confirm_password_change")
-def confirm_password_change(token: str):
+def confirm_password_change(request: Request, token: str):
     
     record = find_one("password_change_requests",{"token": token})
     if not record :
@@ -215,7 +215,7 @@ def confirm_password_change(token: str):
     
     delete_one("password_change_requests", {"token": token})
 
-    return {"message": "✅ Your password has been successfully updated."}
+    return templates.TemplateResponse("confirm_password_change.html", {"request": request})
 
 @router.post(
     "/upload_profile_photo",

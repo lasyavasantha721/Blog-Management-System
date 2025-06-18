@@ -14,7 +14,7 @@ def require_admin(user=Depends(get_current_user_from_cookie)):
 
 @router.get("/users", summary="List all users (admin only)")
 def list_users(admin=Depends(require_admin)):
-    raw = find_many("users", {})
+    users = find_many("users", {})
     return [
         {
             "id":       str(u["_id"]),
@@ -22,7 +22,8 @@ def list_users(admin=Depends(require_admin)):
             "email":    u.get("email"),
             "role":     u.get("role"),
         }
-        for u in raw
+        for u in users
+        if not u.get("is_superadmin") and str(u["_id"]) != str(admin["_id"])
     ]
 
 @router.get("/users/{user_id}", summary="Get details for one user")
