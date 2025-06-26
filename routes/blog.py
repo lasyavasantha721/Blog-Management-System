@@ -40,15 +40,16 @@ async def create_blog_post(
     inserted_id = insert_one("blog_posts", post_doc)
 
     # 4) return in the shape of BlogPostOut
-    return {
-        "_id":     inserted_id,
-        "title":   blog.title,
-        "content": blog.content,
-        "category": blog.category,
-        "user_id": str(user_doc["_id"]),
-        "username": user_doc["username"],
-        "created_at": now.isoformat(),  # match json_encoders or let Pydantic handle datetime
-    }
+    return BlogPostOut(
+        _id=str(inserted_id),
+        title=blog.title,
+        content=blog.content,
+        category=blog.category,
+        user_id=str(user_doc["_id"]),
+        username=user_doc["username"],
+        created_at=now.isoformat() # If BlogPostOut expects datetime, otherwise use now.isoformat()
+    )
+
 
 
 @router.get(
@@ -68,6 +69,7 @@ async def get_blog_posts(
 
     # 3) transform each one
     result = []
+    
     for post in raw_posts:
         result.append({
             "_id":       str(post["_id"]),

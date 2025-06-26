@@ -3,12 +3,12 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 
-class BlogPostCreate(BaseModel):
+class BlogPostCreate(BaseModel):    #request model
     title: str
     content: str
     category: Optional[str] = "general"
 
-class BlogPostOut(BaseModel):
+class BlogPostOut(BaseModel):         #response model
     id: str = Field(alias="_id") #Maps MongoDB’s _id to your Python model’s id
     title: str
     content: str

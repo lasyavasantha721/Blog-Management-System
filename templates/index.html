@@ -1,47 +1,48 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Blog Management System - Modern UI</title>
+  <title>✨ BlogSync - Professional Content Platform</title>
   <!-- Responsive Meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- Google Fonts - Inter & Cal Sans -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Bootstrap CSS (CDN) -->
   <link 
     rel="stylesheet" 
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
   />
-  <!-- Bootstrap Icons (CDN) -->
-  <link 
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
-  />
+  
   <!-- Font Awesome Icons -->
   <link 
-    rel="stylesheet" 
+    rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
   />
-
-  <link rel="stylesheet" href="/static/css/styles.css">
   
+  <!-- Bootstrap Icons -->
+  <link 
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="static/css/styles.css">
+
 </head>
 <body>
 
-  <!-- Modern Navbar -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid px-4">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-        <i class="bi bi-journal-text"></i>
-        ModernBlog
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-blog me-2"></i>BlogSync
       </a>
       <button 
-        class="navbar-toggler border-0" 
+        class="navbar-toggler" 
         type="button" 
         data-bs-toggle="collapse" 
         data-bs-target="#navbarNav"
@@ -55,110 +56,74 @@
         <ul class="navbar-nav ms-auto">
           <!-- Home -->
           <li class="nav-item" data-role="user admin">
-            <a id="navHome" class="nav-link d-flex align-items-center gap-2">
-              <i class="bi bi-house"></i>
-              <span>Home</span>
+            <a id="navHome" class="nav-link">
+              <i class="fas fa-home me-2"></i>Home
             </a>
           </li>
           <!-- Login (only when logged out) -->
           <li class="nav-item" data-role="">
-            <a id="navLogin" class="nav-link d-flex align-items-center gap-2">
-              <i class="bi bi-box-arrow-in-right"></i>
-              <span>Login</span>
+            <a id="navLogin" class="nav-link">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
             </a>
           </li>
           <!-- Register (only when logged out) -->
           <li class="nav-item" data-role="">
-            <a id="navRegister" class="nav-link d-flex align-items-center gap-2">
-              <i class="bi bi-person-plus"></i>
-              <span>Register</span>
+            <a id="navRegister" class="nav-link">
+              <i class="fas fa-user-plus me-2"></i>Register
             </a>
           </li>
           <!-- Blog Posts (only when logged in) -->
           <li class="nav-item" data-role="user admin">
-            <a id="navPosts" class="nav-link hidden d-flex align-items-center gap-2">
-              <i class="bi bi-newspaper"></i>
-              <span>Blog Posts</span>
+            <a id="navPosts" class="nav-link hidden">
+              <i class="fas fa-newspaper me-2"></i>Articles
             </a>
           </li>
           <!-- Create Post (only when logged in) -->
           <li class="nav-item" data-role="user admin">
-            <a id="navCreatePost" class="nav-link hidden d-flex align-items-center gap-2">
-              <i class="bi bi-plus-circle"></i>
-              <span>Create Post</span>
+            <a id="navCreatePost" class="nav-link hidden">
+              <i class="fas fa-edit me-2"></i>Create
             </a>
           </li>
           <!-- Profile (only when logged in) -->
           <li class="nav-item" data-role="user admin">
-            <a id="navProfile" class="nav-link hidden d-flex align-items-center gap-2">
-              <i class="bi bi-person-circle"></i>
-              <span>Profile</span>
+            <a id="navProfile" class="nav-link hidden">
+              <i class="fas fa-user-circle me-2"></i>Profile
             </a>
           </li>
         
           <!-- Admin-only nav item (Manage Users) -->
           <li class="nav-item" data-role="admin">
-            <a id="navManageUsers" class="nav-link d-flex align-items-center gap-2">
-              <i class="bi bi-people"></i>
-              <span>Manage Users</span>
+            <a id="navManageUsers" class="nav-link">
+              <i class="fas fa-users-cog me-2"></i>Management
             </a>
           </li>
           
           <!-- Logout (only when logged in) -->
           <li class="nav-item" data-role="user admin">
-            <a id="navLogout" class="nav-link hidden text-danger d-flex align-items-center gap-2">
-              <i class="bi bi-box-arrow-right"></i>
-              <span>Logout</span>
+            <a id="navLogout" class="nav-link hidden text-danger">
+              <i class="fas fa-sign-out-alt me-2"></i>Logout
             </a>
           </li>
-
         </ul>
       </div>
     </div>
   </nav>
   
-  <!-- Hero Home Section -->
+  <!-- Home Page Section -->
   <div id="homeSection" class="home-container section-container hidden">
     <div class="home-content">
-      <h1 class="display-1 mb-4">Welcome to ModernBlog</h1>
-      <p class="lead fs-4 mb-5">"Express your thoughts, inspire the world."</p>
-      
+      <h1>
+        <i class="fas fa-lightbulb me-3"></i>
+        Welcome to BlogSync
+      </h1>
+      <p class="lead">"Content that connects. Insights that lead."</p>
       <div class="about-container">
-        <h3 class="h2 mb-4">
-          <i class="bi bi-stars me-2"></i>
+        <h3>
+          <i class="fas fa-users me-2"></i>
           About Our Platform
         </h3>
-        <p class="fs-5 mb-3">
-          ModernBlog is a cutting-edge platform where ideas come to life. 
-          Share your stories, experiences, and knowledge with our community of passionate writers and readers!
-        </p>
-        <p class="fs-5 mb-0">
-          Happy blogging!
-        </p>
-        
-        <div class="row mt-4 g-3">
-          <div class="col-md-4">
-            <div class="text-center p-3">
-              <i class="bi bi-palette2 fs-1 text-primary mb-2"></i>
-              <h5>Beautiful Design</h5>
-              <p class="small text-muted">Modern UI with glassmorphism</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="text-center p-3">
-              <i class="bi bi-lightning fs-1 text-primary mb-2"></i>
-              <h5>Fast & Responsive</h5>
-              <p class="small text-muted">Optimized for all devices</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="text-center p-3">
-              <i class="bi bi-shield-check fs-1 text-primary mb-2"></i>
-              <h5>Secure Platform</h5>
-              <p class="small text-muted">Your data is protected</p>
-            </div>
-          </div>
-        </div>
+        <p>BlogSync is a professional content management platform designed for writers, creators and organizations to craft the content that leads and inspire growth. Share your knowledge, build your audience, and engage with a community of passionate writers and readers.</p>
+        <p>Happy Blogging!</p>
       </div>
     </div>
   </div>
@@ -168,149 +133,124 @@
     <!-- Register Section --> 
     <div id="registerSection" class="auth-section hidden">
       <div class="auth-card">
-        <div class="text-center mb-4">
-          <i class="bi bi-person-plus-fill fs-1 text-primary mb-3"></i>
-          <h2 class="h3">Create your account</h2>
-          <p class="text-muted">Join our community of writers</p>
-        </div>
-        
+        <h2>
+          <i class="fas fa-user-plus me-2"></i>
+          Create Account
+        </h2>
         <div id="registerMessage"></div>
-        
         <form id="registerForm" class="auth-form">
-          <div class="mb-3">
-            <label for="regUsername" class="form-label">
-              <i class="bi bi-person me-1"></i>Username
-            </label>
-            <input 
-              id="regUsername" 
-              type="text" 
-              class="form-control"
-              pattern="^[A-Za-z._-]+$" 
-              title="Only letters, ( . ), ( - ), ( _ ) are allowed"
-              placeholder="Choose a unique username" 
-              required 
-            />
-          </div>
+          <label for="regUsername">
+            <i class="fas fa-at me-2"></i>Username
+          </label>
+          <input 
+            id="regUsername" 
+            type="text" 
+            pattern="^[A-Za-z._-]+$" 
+            title="Only letters, ( . ), ( - ), ( _ ) are allowed"
+            placeholder="Enter your username" 
+            required 
+          />
 
-          <div class="mb-3">
-            <label for="regEmail" class="form-label">
-              <i class="bi bi-envelope me-1"></i>Email
-            </label>
-            <input 
-              id="regEmail" 
-              type="email" 
-              class="form-control"
-              placeholder="your.email@example.com" 
-              required 
-            />
-          </div>
+          <label for="regEmail">
+            <i class="fas fa-envelope me-2"></i>Email Address
+          </label>
+          <input 
+            id="regEmail" 
+            type="email" 
+            placeholder="Enter your email address" 
+            required 
+          />
     
-          <div class="mb-4">
-            <label for="regPassword" class="form-label">
-              <i class="bi bi-lock me-1"></i>Password
-            </label>
+          <label for="regPassword">
+            <i class="fas fa-lock me-2"></i>Password
+          </label>
+          <div class="password-field">
             <input 
               id="regPassword" 
               type="password" 
-              class="form-control"
-              placeholder="Create a strong password"
+              placeholder="Create a secure password"
               required
             />
           </div>
     
           <button type="submit" class="btn-submit">
-            <i class="bi bi-check-circle me-2"></i>
-            Create Account
+            <i class="bi bi-person-plus me-2"></i>Create Account
           </button>
         </form>
     
-        <div class="auth-footer">
-          Already have an account? 
-          <a id="signInLink" href="#" class="fw-semibold">Sign in</a>
-        </div>
+        <p class="auth-footer">
+          Already have an account? <a id="signInLink" href="#">Sign in here</a>
+        </p>
       </div>
     </div>
 
     <!-- Login Section -->
     <div id="loginSection" class="auth-section hidden">
       <div class="auth-card">
-        <div class="text-center mb-4">
-          <i class="bi bi-box-arrow-in-right fs-1 text-primary mb-3"></i>
-          <h2 class="h3">Welcome back</h2>
-          <p class="text-muted">Sign in to your account</p>
-        </div>
-        
+        <h2>
+          <i class="fas fa-sign-in-alt me-2"></i>
+          Welcome Back
+        </h2>
         <div id="loginMessage"></div>
-        
         <form id="loginForm" class="auth-form">
-          <div class="mb-3">
-            <label for="loginUsername" class="form-label">
-              <i class="bi bi-person me-1"></i>Username/Email
-            </label>
-            <input 
-              id="loginUsername" 
-              type="text" 
-              class="form-control"
-              placeholder="Enter your username or email" 
-              required 
-            />
-          </div>
+          <label for="loginUsername">
+            <i class="fas fa-user me-2"></i>Email Address
+          </label>
+          <input 
+            id="loginUsername" 
+            type="text" 
+            placeholder="Enter your Email" 
+            required 
+          />
     
-          <div class="mb-4">
-            <label for="loginPassword" class="form-label">
-              <i class="bi bi-lock me-1"></i>Password
-            </label>
+          <label for="loginPassword">
+            <i class="fas fa-lock me-2"></i>Password
+          </label>
+          <div class="password-field">
             <input 
               id="loginPassword" 
               type="password" 
-              class="form-control"
               placeholder="Enter your password"
               required
             />
           </div>
     
           <button type="submit" class="btn-submit">
-            <i class="bi bi-box-arrow-in-right me-2"></i>
-            Sign In
+            <i class="fas fa-arrow-right me-2"></i>Sign In
           </button>
         </form>
 
         <!-- Forgot Password Link -->
-        <div class="auth-footer">
-          <a id="forgotPasswordLink" href="/request_password_reset" class="fw-semibold text-primary">
-            <i class="bi bi-question-circle me-1"></i>Forgot Password?
+        <p class="auth-footer">
+          <a id="forgotPasswordLink" href="/request_password_reset">
+            <i class="fas fa-unlock-alt me-1"></i>Forgot Password?
           </a>
-        </div>
+        </p>
     
-        <div class="auth-footer mt-3">
-          Don't have an account? 
-          <a id="signUpLink" href="#" class="fw-semibold">Sign up now</a>
-        </div>
+        <p class="auth-footer">
+          New to BlogSync? <a id="signUpLink" href="#">Create an account</a>
+        </p>
       </div>
     </div>
 
     <!-- Blog Posts Section -->
     <section id="postsSection" class="section-container" data-role="user admin" hidden>
       <div class="section-content">
-        <div class="text-center mb-5">
-          <h2 class="blog-section-title">
-            <i class="bi bi-newspaper me-3"></i>
-            Discover Amazing Stories
-          </h2>
-          <p class="lead text-muted">Explore the latest posts from our community</p>
-        </div>
-        
+        <h2 class="blog-section-title">
+          <i class="fas fa-newspaper me-3"></i>
+          Latest Articles
+        </h2>
         <div id="postsMessage"></div>
         
         <!-- Search Bar -->
-        <div class="search-bar-wrapper mx-auto mb-5" style="max-width: 600px;">
-          <i class="bi bi-search"></i>
+        <div class="search-bar-wrapper">
           <input 
             type="text" 
             id="blogSearchBar" 
-            class="form-control"
-            placeholder="Search for posts by title, categories, or authors..." 
+            placeholder="Search articles, topics, or authors..." 
+            oninput="App.common.filterPosts()"
           />
+          <i class="fas fa-search"></i>
         </div>
         
         <!-- Blog Grid -->
@@ -321,68 +261,62 @@
     <!-- Create Post Section -->
     <div id="createPostSection" class="section-container hidden">
       <div class="section-content">
-        <div class="text-center mb-5">
-          <i class="bi bi-plus-circle-fill fs-1 text-primary mb-3"></i>
-          <h3 class="h2">Create a New Blog Post</h3>
-          <p class="lead text-muted">Share your thoughts with the world</p>
-        </div>
-        
+        <h3>
+          <i class="fas fa-pen-fancy me-3"></i>
+          Create New Article
+        </h3>
         <div id="createPostMessage"></div>
-        
-        <form id="createPostForm" class="row g-4">
-          <div class="col-12">
-            <label for="postTitle" class="form-label fw-semibold">
-              <i class="bi bi-type me-2"></i>Post Title
+        <form id="createPostForm" class="mt-4">
+          <div class="mb-4">
+            <label for="postTitle" class="form-label">
+              <i class="fas fa-quote-right me-2"></i>Article Title
             </label>
             <input 
               type="text" 
-              class="form-control form-control-lg" 
+              class="form-control" 
               id="postTitle" 
-              placeholder="Enter an engaging title for your post" 
+              placeholder="Enter a compelling title for your article..." 
               required 
             />
           </div>
           
-          <div class="col-md-6">
-            <label for="postCategory" class="form-label fw-semibold">
-              <i class="bi bi-tags me-2"></i>Category
-            </label>
-            <select id="postCategory" class="form-control" required>
-              <option value="">Select a category</option>
-              <option value="Tech & Programming">🔧 Tech & Programming</option>
-              <option value="lifestyle">🌟 Lifestyle</option>
-              <option value="general" selected>📝 General</option>
-              <option value="career">💼 Career</option>
-              <option value="Review">⭐ Review</option>
-              <option value="travel">✈️ Travel</option>
-              <option value="food">🍽️ Food</option>
-              <option value="health">🏥 Health</option>
-            </select>
-          </div>
-          
-          <div class="col-12">
-            <label for="postContent" class="form-label fw-semibold">
-              <i class="bi bi-file-text me-2"></i>Content
+          <div class="mb-4">
+            <label for="postContent" class="form-label">
+              <i class="fas fa-align-left me-2"></i>Content
             </label>
             <textarea 
               id="postContent" 
               class="form-control" 
               rows="8" 
-              placeholder="Write your amazing content here... Share your insights, experiences, and knowledge with the community."
+              placeholder="Write your article content here. Share your insights, expertise, and valuable information..." 
               required
             ></textarea>
-            <div class="form-text">
-              <i class="bi bi-info-circle me-1"></i>
-              Tip: Use clear paragraphs and engaging language to connect with your readers.
-            </div>
+          </div>
+
+          <!-- Category Dropdown -->
+          <div class="mb-4">
+            <label for="postCategory" class="form-label">
+              <i class="fas fa-tags me-2"></i>Category
+            </label>
+            <select 
+              class="form-control Dropdown"
+              id="postCategory" 
+              required
+            >
+              <option value="Tech & Programming">💻 Technology & Programming</option>
+              <option value="lifestyle">🌟 Lifestyle & Wellness</option>
+              <option value="general" selected>📝 General</option>
+              <option value="career">💼 Career & Professional</option>
+              <option value="Review">⭐ Reviews & Analysis</option>
+              <option value="travel">✈️ Travel</option>
+              <option value="Fashion"> 🧥Fashion</option>
+            </select>
           </div>
           
-          <div class="col-12 text-center">
-            <button type="submit" class="btn btn-success btn-lg px-5">
-              <i class="bi bi-send me-2"></i>
-              Publish Post
-            </button>
-          </div>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-paper-plane me-2"></i>
+            Publish Article
+          </button>
         </form>
       </div>
     </div>
@@ -434,19 +368,19 @@
         <div class="profile-tabs">
           <button class="tab-button" data-target="yourPostsPanel">
             <i class="fas fa-folder-open"></i>
-            <span>Your Posts</span>
+            <span>Your Articles</span>
           </button>
           <button class="tab-button" data-target="editProfilePanel">
-            <i class="fas fa-user-edit"></i>
+            <i class="fas fa-user-edit me-2"></i>
             <span>Edit Profile</span>
           </button>
           <button class="tab-button" data-target="changePasswordPanel">
-            <i class="fas fa-key"></i>
+            <i class="fas fa-key me-2"></i>
             <span>Security</span>
           </button>
           <button class="tab-button" data-target="savedPostsPanel">
-            <i class="fas fa-bookmark"></i>
-            <span>Saved Posts</span>
+            <i class="fas fa-bookmark me-2"></i>
+            <span>Saved Articles</span>
           </button>
         </div>
 
@@ -614,8 +548,7 @@
       </div>
     </div>
 
-    
-<!-- Edit Post Modal -->
+    <!-- Edit Post Modal -->
     <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -644,79 +577,63 @@
       </div>
     </div>
 
-    <!-- Enhanced Admin Section -->
+    <!-- Admin: Manage Users Section -->
     <section id="adminUsersSection" data-role="admin" class="section-container hidden">
-      <div class="text-center mb-5">
-        <i class="bi bi-people-fill fs-1 text-primary mb-3"></i>
-        <h2 class="h1">User Management</h2>
-        <p class="lead text-muted">Manage users and their permissions</p>
-      </div>
-      
-      <div id="adminMessage"></div>
+      <div class="section-content">
+        <h2>
+          <i class="fas fa-users-cog me-3"></i>
+          User Management
+        </h2>
+        <div id="adminMessage"></div>
 
-      <!-- Enhanced Search -->
-      <div class="row mb-4">
-        <div class="col-md-6 mx-auto">
-          <div class="position-relative">
-            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+        <!-- Search / Filter -->
+        <div class="form-group mb-4">
+          <div class="search-bar-wrapper">
             <input
               type="text"
               id="userSearchInput"
-              class="form-control ps-5"
               placeholder="Search users by username or email..."
               oninput="App.admin.filterUsers()"
             />
+            <i class="fas fa-search"></i>
           </div>
         </div>
-      </div>
 
-      <!-- Enhanced Users Table -->
-      <div class="table-responsive">
-        <table id="adminUsersTable" class="table table-hover">
-          <thead>
-            <tr>
-              <th><i class="bi bi-hash me-1"></i>ID</th>
-              <th><i class="bi bi-person me-1"></i>Username</th>
-              <th><i class="bi bi-envelope me-1"></i>Email</th>
-              <th><i class="bi bi-shield me-1"></i>Role</th>
-              <th><i class="bi bi-gear me-1"></i>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Rows will be injected by App.admin.loadUsers() -->
-          </tbody>
-        </table>
-      </div>
+        <!-- Users Table -->
+        <div class="table-responsive">
+          <table id="adminUsersTable" class="table">
+            <thead>
+              <tr>
+                <th><i class="fas fa-hashtag me-2"></i>ID</th>
+                <th><i class="fas fa-user me-2"></i>Username</th>
+                <th><i class="fas fa-envelope me-2"></i>Email</th>
+                <th><i class="fas fa-crown me-2"></i>Role</th>
+                <th><i class="fas fa-cogs me-2"></i>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be injected by App.admin.loadUsers() -->
+            </tbody>
+          </table>
+        </div>
 
-      <!-- Enhanced User Detail Modal -->
-      <div id="userDetailModal" class="admin-modal hidden">
-        <div class="modal-content">
-          <span class="modal-close" onclick="App.admin.closeUserModal()">&times;</span>
-          <div class="text-center mb-4">
-            <i class="bi bi-person-circle fs-1 text-primary mb-2"></i>
-            <h3 id="modalUsername" class="h4">Username</h3>
-          </div>
-          <div class="row g-3">
-            <div class="col-6">
-              <strong>Email:</strong>
-            </div>
-            <div class="col-6">
-              <span id="modalEmail" class="text-muted">—</span>
-            </div>
-            <div class="col-6">
-              <strong>Total Posts:</strong>
-            </div>
-            <div class="col-6">
-              <span id="modalPostCount" class="badge bg-primary">0</span>
-            </div>
+        <!-- User Detail Modal -->
+        <div id="userDetailModal" class="admin-modal hidden">
+          <div class="modal-content">
+            <span class="modal-close" onclick="App.admin.closeUserModal()">&times;</span>
+            <h3 id="modalUsername">
+              <i class="fas fa-user-circle me-2"></i>
+              User Details
+            </h3>
+            <p><strong><i class="fas fa-envelope me-2"></i>Email:</strong> <span id="modalEmail"></span></p>
+            <p><strong><i class="fas fa-newspaper me-2"></i>Total Articles:</strong> <span id="modalPostCount"></span></p>
           </div>
         </div>
       </div>
     </section>
-
   </div>
 
-  <!-- Enhanced Post Modal -->
+  <!-- Post Modal (Bootstrap) -->
   <div
     class="modal fade"
     id="postModal"
@@ -724,10 +641,12 @@
     aria-labelledby="postModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header border-0 bg-light">
-          <h5 id="postModalLabel" class="modal-title fw-bold text-truncate me-3"></h5>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="postModalLabel" class="modal-title">
+            <i class="fas fa-book-open me-2"></i>
+          </h5>
           <button
             type="button"
             class="btn-close"
@@ -735,42 +654,36 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
-          <div
-            id="postModalBody"
-            class="fs-6 lh-lg"
-            style="white-space: pre-wrap;"
-          ></div>
-        </div>
-        <div class="modal-footer border-0 bg-light justify-content-between">
-          <small class="text-muted d-flex align-items-center" id="postModalMeta">
-            <i class="bi bi-info-circle me-1"></i>
-          </small>
-          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
-            <i class="bi bi-x-circle me-1"></i>Close
-          </button>
+        <div
+          id="postModalBody"
+          class="modal-body"
+          style="white-space: pre-wrap; line-height: 1.7; color: var(--text-primary);"
+        ></div>
+        <div class="modal-footer">
+          <small class="text-muted" id="postModalMeta"></small>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Loading Spinner Component -->
-  <div id="loadingSpinner" class="position-fixed top-50 start-50 translate-middle d-none" style="z-index: 9999;">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
 
-  <!-- Toast Notification Container -->
-  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-    <!-- Toast notifications will be dynamically added here -->
+  <!-- delete confirmation Modal (Bootstrap) -->
+
+  <div id="deleteConfirmModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <p>🗑️ Are you sure you want to delete this article?<br><br><small>This action cannot be undone.</small></p>
+      <div class="modal-actions">
+        <button id="confirmDeleteYes" class="btn btn-danger">Yes, Delete</button>
+        <button id="confirmDeleteNo" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <!-- Bootstrap JS (CDN) -->
   <script 
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
   ></script>
-  
+    
   <!-- Main JavaScript -->
   <script src="/static/js/main.js"></script>
 </body>

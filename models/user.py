@@ -3,7 +3,7 @@ from fastapi import Form
 from typing import Literal
 from typing import Optional
 # Data model
-class RegisterRequest(BaseModel):
+class RegisterRequest(BaseModel):   
     username: str
     email: EmailStr
     password: str
@@ -14,7 +14,8 @@ class EditProfileForm(BaseModel):
     new_username: Optional[str]    = Field(None)
     new_email:    Optional[EmailStr]= None
 
-class UserOut(BaseModel):
+# Response model
+class UserOut(BaseModel): 
     id: str
     username: str
     email: EmailStr

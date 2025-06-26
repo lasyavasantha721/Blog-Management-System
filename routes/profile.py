@@ -8,7 +8,7 @@ from datetime import datetime, timezone, timedelta
 from email.message import EmailMessage
 from uuid import uuid4
 import smtplib
-from config.db import find_many, update_one, find_one, get_collection, insert_one, delete_one
+from config.db import find_many, update_one, find_one, get_collection, insert_one, delete_one, db
 
 RESET_EXPIRE_MINUTES = int(os.getenv("RESET_TOKEN_EXPIRE_MINUTES", 30))
 SMTP_USER = os.getenv("EMAIL_USER")
@@ -36,6 +36,7 @@ async def get_user_profile(
             "id":      str(p["_id"]),
             "title":   p.get("title", ""),
             "content": p.get("content", ""),
+            "created_at": p.get("created_at", datetime.now(timezone.utc)),
             # optionally include category, created_at, etc.
         }
         for p in raw_posts
@@ -96,6 +97,13 @@ def edit_profile(
     )
     if modified == 0:
         raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="No changes were made to the profile")
+    
+     # 4) Also update the blog posts with new username
+    if "username" in updates:
+        db["blog_posts"].update_many(
+            {"user_id": ObjectId(user_doc["_id"])},
+            {"$set": {"username": updates["username"]}}
+        )
 
     # 4) Return the JSON your JS is looking for
     return {"message": "Profile updated successfully"}
@@ -272,10 +280,10 @@ def remove_profile_photo(
 ):
     if not current_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
-
+    
     # 1) Load the user
-    users_col = get_collection("users")
-    user_doc = users_col.find_one({"_id": ObjectId(current_user["_id"])})
+    user_doc = find_one("users", {"_id": ObjectId(current_user["_id"])})
+
     if not user_doc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
@@ -287,6 +295,7 @@ def remove_profile_photo(
             pass
 
     # 3) Unset the field properly
+    users_col = get_collection("users")
     result = users_col.update_one(
         {"_id": ObjectId(current_user["_id"])},
         {"$unset": {"photo_path": ""}}

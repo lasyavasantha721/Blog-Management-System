@@ -26,7 +26,7 @@ from config.auth_deps import (
 from config.db import find_one, insert_one
 from models.user import RegisterRequest
 
-router = APIRouter()
+router = APIRouter(tags=["user"])
 
 # ──────────────────────────────────────────────────────
 # Configuration
