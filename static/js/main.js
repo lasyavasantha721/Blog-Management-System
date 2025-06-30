@@ -324,46 +324,63 @@ navLogout.addEventListener("click", async () => {
   }
 });
 
-/************************************************
-  Register form with Enhanced Validation
-************************************************/
-// Allow only alphabet characters in the username field
-document.getElementById("regUsername").addEventListener("input", function () {
-  this.value = this.value.replace(/[^a-zA-Z_-]/g, "");
-  validateField(this);
-});
 
-// Real-time validation
+// Real-time input validation for register form, editprofile and changepassword form 
 function validateField(field) {
   const value = field.value.trim();
-  const fieldType = field.type;
   const fieldId = field.id;
   
   field.classList.remove("is-valid", "is-invalid");
   
-  if (fieldId === "regUsername") {
+  if (fieldId === "regUsername" || fieldId === "newUsername") {
     if (value.length >= 3 && /^[a-zA-Z_-]+$/.test(value)) {
       field.classList.add("is-valid");
     } else if (value.length > 0) {
       field.classList.add("is-invalid");
     }
-  } else if (fieldType === "email") {
+  } else if (fieldId === "regEmail" || fieldId === "newEmail") {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailRegex.test(value)) {
       field.classList.add("is-valid");
     } else if (value.length > 0) {
       field.classList.add("is-invalid");
     }
-  } else if (fieldType === "password") {
+  } else if (fieldId === "regPassword" || fieldId ==="newPassword") {
     if (value.length >= 6) {
       field.classList.add("is-valid");
     } else if (value.length > 0) {
       field.classList.add("is-invalid");
     }
   }
+  //input validation for name in edit profile tab
+    else if (fieldId === "newName") {
+    if (value.length >= 2 && /^[a-zA-Z ]+$/.test(value)) {
+      field.classList.add("is-valid");
+    } else if (value.length > 0) {
+      field.classList.add("is-invalid");
+    }
+  }
+  // input validation for password in change password tab
+    else if (fieldId === "confirmPassword") {
+    const newPwdValue = document.getElementById("newPassword").value.trim();
+    if (value === newPwdValue && value.length >= 6) {
+      field.classList.add("is-valid");
+    } else if (value.length > 0) {
+      field.classList.add("is-invalid");
+    }
+  }
+    
 }
 
-// Add validation to email and password fields
+/************************************************
+  Register form with input Validation
+************************************************/
+
+document.getElementById("regUsername").addEventListener("input", function () {
+  this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, "");  //to stop the user to use the invalid input format
+  validateField(this);
+});
+
 document.getElementById("regEmail").addEventListener("input", function() {
   validateField(this);
 });
@@ -371,6 +388,7 @@ document.getElementById("regEmail").addEventListener("input", function() {
 document.getElementById("regPassword").addEventListener("input", function() {
   validateField(this);
 });
+
 
 registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -382,16 +400,36 @@ registerForm.addEventListener("submit", async (e) => {
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
   submitBtn.disabled = true;
   
-  const username = document.getElementById("regUsername").value;
-  const password = document.getElementById("regPassword").value;
-  const email = document.getElementById("regEmail").value;
+  const username = document.getElementById("regUsername");
+  const password = document.getElementById("regPassword");
+  const email = document.getElementById("regEmail");
+
+
+  // Trigger re-validation during submission
+  validateField(username);
+  validateField(email);
+  validateField(password);
+
+  // Stop if any field is invalid
+  if (
+    !username.classList.contains("is-valid") ||
+    !email.classList.contains("is-valid") ||
+    !password.classList.contains("is-valid")
+  ) {
+    showMessage("registerMessage", "error", "Please fix the highlighted fields.");
+    return;
+  }
 
   try {
     const response = await fetch("/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ username, email, password}),
+      body: JSON.stringify({ 
+        username: username.value.trim(),
+        email: email.value.trim(),
+        password: password.value.trim(),
+      }),
     });
 
     const data = await response.json();
@@ -1568,14 +1606,22 @@ async function fetchProfileForEdit() {
   }
 }
 
-// Input validation for profile edit
+// Attach real-time validation
 document.getElementById("newName").addEventListener("input", function () {
   this.value = this.value.replace(/[^a-zA-Z ]/g, "");
+  validateField(this);
 });
 
 document.getElementById("newUsername").addEventListener("input", function () {
-  this.value = this.value.replace(/[^a-zA-Z._-]/g, "");
+  this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, "");
+  validateField(this);
 });
+
+document.getElementById("newEmail").addEventListener("input", function () {
+  validateField(this);
+});
+
+
 
 // Save profile changes
 const saveProfileBtn = document.getElementById("saveProfileBtn");
@@ -1592,6 +1638,22 @@ if (saveProfileBtn) {
     const newName = nameEl ? nameEl.value.trim() : "";
     const newUsername = userEl ? userEl.value.trim() : "";
     const newEmail = emailEl ? emailEl.value.trim() : "";
+
+    validateField(nameEl);
+    validateField(userEl);
+    validateField(emailEl);
+
+    if (
+      (!nameEl.classList.contains("is-valid")) ||
+      (!userEl.classList.contains("is-valid")) ||
+      (!emailEl.classList.contains("is-valid"))
+    ) {
+      showMessage("editProfileMessage", "error", "Please fix the highlighted fields before saving.");
+      saveProfileBtn.innerHTML = originalText;
+      saveProfileBtn.disabled = false;
+      return;
+    }
+
 
     // Build FormData with only non-empty fields
     const fd = new FormData();
@@ -1644,6 +1706,15 @@ if (saveProfileBtn) {
 const savePasswordBtn = document.getElementById("savePasswordBtn");
 const changePasswordForm = document.getElementById("changePasswordForm");
 
+//for styling the fields during validation 
+document.getElementById("newPassword").addEventListener("input", function () {
+  validateField(this);
+});
+
+document.getElementById("confirmPassword").addEventListener("input", function () {
+  validateField(this);
+});
+
 if (savePasswordBtn && changePasswordForm) {
   savePasswordBtn.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -1652,9 +1723,12 @@ if (savePasswordBtn && changePasswordForm) {
     savePasswordBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
     savePasswordBtn.disabled = true;
 
-    const oldPwd = document.getElementById("oldPassword")?.value.trim() || "";
+    const oldPwd = document.getElementById("oldPassword")?.value.trim() || "";  // "" is fallback if ele is missing or ele is null
     const newPwd = document.getElementById("newPassword")?.value.trim() || "";
     const confirmPwd = document.getElementById("confirmPassword")?.value.trim() || "";
+    // As validation needs this ele from form
+    const newPasswordInput = document.getElementById("newPassword"); 
+    const confirmPasswordInput = document.getElementById("confirmPassword"); 
 
     // Basic validation
     if (!oldPwd || !newPwd || !confirmPwd) {
@@ -1663,16 +1737,16 @@ if (savePasswordBtn && changePasswordForm) {
       savePasswordBtn.disabled = false;
       return;
     }
-    
-    if (newPwd !== confirmPwd) {
-      showMessage("changePasswordMessage", "error", "❌ New passwords do not match");
-      savePasswordBtn.innerHTML = originalText;
-      savePasswordBtn.disabled = false;
-      return;
-    }
 
-    if (newPwd.length < 6) {
-      showMessage("changePasswordMessage", "error", "❌ Password must be at least 6 characters long");
+    //validation using validateInput()
+    validateField(newPasswordInput);
+    validateField(confirmPasswordInput);
+
+    if ( 
+      !newPasswordInput.classList.contains("is-valid") ||
+      !confirmPasswordInput.classList.contains("is-valid") 
+    ) {
+      showMessage("changePasswordMessage", "error", "Please fix the highlighted fields before saving.");
       savePasswordBtn.innerHTML = originalText;
       savePasswordBtn.disabled = false;
       return;

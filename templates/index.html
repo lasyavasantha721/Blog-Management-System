@@ -144,9 +144,9 @@
           </label>
           <input 
             id="regUsername" 
+            class="form-control"
             type="text" 
-            pattern="^[A-Za-z._-]+$" 
-            title="Only letters, ( . ), ( - ), ( _ ) are allowed"
+            title="Username must be 3+ characters: letters, numbers, underscores (_) or hyphens (-)."
             placeholder="Enter your username" 
             required 
           />
@@ -155,8 +155,10 @@
             <i class="fas fa-envelope me-2"></i>Email Address
           </label>
           <input 
+            class="form-control"
             id="regEmail" 
             type="email" 
+            title="Please enter a valid email address (e.g., name@example.com)"
             placeholder="Enter your email address" 
             required 
           />
@@ -166,8 +168,10 @@
           </label>
           <div class="password-field">
             <input 
+              class="form-control"
               id="regPassword" 
               type="password" 
+              title="Password must be at least 6 characters long"
               placeholder="Create a secure password"
               required
             />
@@ -423,7 +427,7 @@
                     class="form-control"
                     placeholder="Enter new username"
                     pattern="^[A-Za-z._-]+$" 
-                    title="Only alphabets, ( . ), ( - ), ( _ ) are allowed"
+                    title="Username must be 3+ characters: letters, numbers, underscores (_) or hyphens (-)."
                   />
                 </div>
                 
@@ -450,6 +454,7 @@
                     id="newEmail" 
                     name="new_email"
                     class="form-control"
+                    title="Enter a valid email (e.g., name@example.com). "
                     placeholder="Enter your email address"
                   />
                 </div>

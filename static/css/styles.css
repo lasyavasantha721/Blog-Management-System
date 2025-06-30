@@ -1838,3 +1838,10 @@ button[data-action="promote"] {
   display: none;
 }
 
+/* validations styling*/
+input.is-valid {
+  border-color: #198754; /* green */
+}
+input.is-invalid {
+  border-color: #dc3545; /* red */
+}
