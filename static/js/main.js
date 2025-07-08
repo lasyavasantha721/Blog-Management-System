@@ -2211,4 +2211,98 @@ window.BlogSpace = {
   }
 };
 
-console.log("✨ BlogSpace application ready!");
+//OPENAI
+
+document.addEventListener('DOMContentLoaded', () => {
+  const suggestBtn     = document.getElementById('suggestBtn');
+  const titleInput     = document.getElementById('postTitle');
+  const contentInput   = document.getElementById('postContent'); // assumes textarea
+  const suggestionsBox = document.getElementById('suggestionsBox');
+
+// Clear suggestions when the title is modified
+  titleInput.addEventListener('input', () => {
+    suggestionsBox.innerHTML = '';
+  });
+
+  suggestBtn.addEventListener('click', async () => {
+    const title = titleInput.value.trim();
+    const content = contentInput?.value?.trim() || "";
+
+    if (!title) {
+      suggestionsBox.innerHTML = '<p class="text-danger">❗ Please enter at least a rough idea of your blog title so I can generate creative suggestions for you</p>';
+      return;
+    }
+
+    const tipBox = document.getElementById('tipBox');
+
+    if (!content) {
+      tipBox.textContent = "💡 Tip: Writing your content first helps generate more personalized and accurate title suggestions.";
+      tipBox.style.display = "block";
+
+      setTimeout(() => {
+        tipBox.style.display = "none";
+      }, 8000);
+    } else {
+      tipBox.style.display = "none";
+    }
+    
+    // Show loading
+    suggestionsBox.innerHTML += '<p>🔄 Generating suggestions…</p>';
+    suggestBtn.disabled = true;
+
+    try {
+      const res = await fetch('/ai/suggest_outlines', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content })
+      });
+
+      if (!res.ok) throw new Error(`Server error (${res.status})`);
+
+      const { suggestions } = await res.json();
+
+      const outlines = (suggestions || '')
+        .split(/\r?\n/)
+        .map(line => line.replace(/^\s*\d+[\).\-\s]*/, '').trim())
+        .filter(line => line.length > 0);
+
+      if (outlines.length) {
+        suggestionsBox.innerHTML = '';
+        const ul = document.createElement('ul');
+        ul.className = 'list-group';
+        outlines.slice(0, 4).forEach(text => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          li.textContent = text;
+          ul.appendChild(li);
+        });
+        suggestionsBox.appendChild(ul);
+
+          // Add Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.id = 'closeSuggestionsBtn';
+        closeBtn.textContent = 'Close Suggestions';
+        closeBtn.className = 'btn btn-sm btn-secondary mt-3';
+        closeBtn.style.backgroundColor = '#6c757d';  // Optional custom background
+        closeBtn.style.color = 'white';
+        closeBtn.style.borderRadius = '6px';
+        closeBtn.style.fontWeight = '500';
+        closeBtn.style.marginTop = '10px';
+
+        closeBtn.addEventListener('click', () => {
+          suggestionsBox.innerHTML = '';
+        });
+        suggestionsBox.appendChild(closeBtn);
+
+      } else {
+        suggestionsBox.innerHTML = '<p class="text-muted">No suggestions returned.</p>';
+      }
+
+    } catch (err) {
+      console.error(err);
+      suggestionsBox.innerHTML = `<p class="text-danger">Error: ${err.message}</p>`;
+    } finally {
+      suggestBtn.disabled = false;
+    }
+  });
+});

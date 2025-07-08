@@ -68,7 +68,7 @@ async def get_user_profile(
     status_code=status.HTTP_200_OK,
 )
 def edit_profile(
-    new_name:     str = Form(None),
+    new_name:     str = Form(None),   #FASTAPI expecting form data
     new_username: str = Form(None),
     new_email:    str = Form(None),
     user_doc            = Depends(get_current_user_from_cookie),

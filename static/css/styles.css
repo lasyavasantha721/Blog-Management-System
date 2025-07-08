@@ -1845,3 +1845,8 @@ input.is-valid {
 input.is-invalid {
   border-color: #dc3545; /* red */
 }
+
+.tip-text {
+  color: #070929; /* or any color you prefer */
+  font-weight: 500;
+}

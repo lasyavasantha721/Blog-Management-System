@@ -89,6 +89,7 @@ async def get_blog_posts(
     status_code=status.HTTP_200_OK,
 )
 def update_blog_post(
+    #FASTAPI expects form data as..
     post_id: str,
     title: str   = Form(...),
     content: str = Form(...),

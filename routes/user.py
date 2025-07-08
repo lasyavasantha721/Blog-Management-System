@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, Request, Response, Form, HTTPException, status
+from fastapi import APIRouter, Depends, Query, Request, Form, HTTPException, status
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -39,6 +39,7 @@ SMTP_PASS = os.getenv("EMAIL_PASSWORD")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 router.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Initialize Jinja2 templates for rendering HTML
 templates = Jinja2Templates(directory="templates")
 
@@ -46,6 +47,7 @@ templates = Jinja2Templates(directory="templates")
 def request_password_reset(request: Request):
     return templates.TemplateResponse("forgot_password.html", {"request": request})
 
+#renders html form after verifying the token in reset link
 @router.get(
     "/reset_password",
     response_class=HTMLResponse,
@@ -64,6 +66,7 @@ def reset_password_page(
             "token": token,   # pass the token into your template
         }
     )
+
 # --- User Routes ---
 
 @router.get("/")
@@ -102,7 +105,7 @@ def register_user(req: RegisterRequest):
 
 
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
+def login(form_data: OAuth2PasswordRequestForm = Depends()):  #parse the login form data and inject form data into your function
     user = authenticate_user(form_data.username, form_data.password)
     
     if not user:
@@ -217,7 +220,7 @@ def request_password_reset(
     # 3) Generate a reset token + link to your front‐end reset page
     token = create_reset_token(user_doc["_id"])
     
-    reset_link = f"{origin}/reset_password?token={token}"
+    reset_link = f"{origin}/reset_password?token={token}"   #URL that includes the unique token as a query parameter.
 
     try:
         send_reset_email(email, reset_link)

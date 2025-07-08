@@ -271,6 +271,8 @@
         </h3>
         <div id="createPostMessage"></div>
         <form id="createPostForm" class="mt-4">
+
+          <!-- Title Input -->
           <div class="mb-4">
             <label for="postTitle" class="form-label">
               <i class="fas fa-quote-right me-2"></i>Article Title
@@ -282,8 +284,23 @@
               placeholder="Enter a compelling title for your article..." 
               required 
             />
+
+            <!-- Suggest Outline Button -->
+            <div class="d-flex justify-content-end mt-2">
+              <button type="button" id="suggestBtn" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-magic me-2"></i>Suggest Outlines
+              </button>
+            </div>
+
+            <!-- Reusable Tip Message (initially hidden) -->
+            <p id="tipBox" class="tip-text mb-2" style="display: none;"></p>
+
+            <!-- AI Suggestions Display -->
+            <div id="suggestionsBox" class="mt-3 text-muted" style="font-size: 0.9rem;"></div>
           </div>
+
           
+
           <div class="mb-4">
             <label for="postContent" class="form-label">
               <i class="fas fa-align-left me-2"></i>Content
@@ -325,6 +342,7 @@
       </div>
     </div>
 
+    
     <!-- Profile Section -->
     <div id="profileSection" class="section-container hidden">
       <div class="section-content profile-layout">
